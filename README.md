@@ -1,6 +1,28 @@
+DEEP\_ABYSS
+----
+
+Experimental game written in rust using bevy.
+
+## Development
+
+To build a development build, clone and run:
+```sh
+cargo run --features bevy/dynamic_linking
+```
+
+## Production
+
+TBA
+
+## Releases
+
+WIP
+
 ## License
 
-The content of this project itself is licensed under the [Creative Commons
-Attribution-NonCommercial 4.0 International (CC BY-NC
-4.0)](https://creativecommons.org/licenses/by-nc/4.0/), and the underlying
-source code used to display that content is licensed under the MIT license.
+- Copyright (c) 2024 Daniel Berg
+- Source code distributed under [GNU General Public License v3.0](LICENSE) or later.
+- Copyright (c) 2024 for music assets are held by [Per Christian Berg](https://perchristianberg.com).
+- The graphical assets is licensed under a <a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons
+  Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
