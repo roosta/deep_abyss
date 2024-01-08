@@ -1,7 +1,10 @@
 DEEP\_ABYSS
 ----
 
-Experimental game written in rust using bevy.
+Nautical roguelite game for multiple platforms written in rust using
+[Bevy](https://bevyengine.org/).
+
+> Still in very early development, nothing to see here yet...
 
 ## Development
 
@@ -9,14 +12,19 @@ To build a development build, clone and run:
 ```sh
 cargo run --features bevy/dynamic_linking
 ```
-
-## Production
-
-TBA
-
 ## Releases
 
-WIP
+Check the release page for pre-compiled binaries.
+
+To build a release binary run:
+```
+cargo build --release
+```
+The binary is located in `target/release/deep_abyss`. Currently you need to run
+the binary along side the asset directory, else it will produce an error about
+missing assets.
+
+This will be improved later, but the releases are packaged with the assets.
 
 ## License
 
