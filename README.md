@@ -14,9 +14,10 @@ cargo run --features bevy/dynamic_linking
 ```
 ## Releases
 
-Check the release page for pre-compiled binaries.
+Check the [releases](https://github.com/roosta/deep_abyss/releases) page for pre-compiled binaries.
 
-To build a release binary run:
+
+To build a release binary install [dependencies](https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md) and run this:
 ```
 cargo build --release
 ```
@@ -25,6 +26,7 @@ the binary along side the asset directory, else it will produce an error about
 missing assets.
 
 This will be improved later, but the releases are packaged with the assets.
+
 
 ## License
 
