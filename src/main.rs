@@ -11,10 +11,18 @@ struct Direction(Vec2);
 #[derive(Component)]
 struct Player;
 
-fn apply_velocity(mut query: Query<(&mut Transform, &Velocity, &Direction)>, time: Res<Time>) {
+fn apply_velocity(
+    mut query: Query<(&mut Transform, &Velocity, &Direction)>,
+    time: Res<Time>,
+) {
     for (mut transform, velocity, direction) in &mut query {
-        transform.translation.x += velocity.x * direction.x * time.delta_seconds();
-        transform.translation.y += velocity.y * direction.y * time.delta_seconds();
+
+        let delta_x = velocity.x * direction.x * time.delta_seconds();
+        let delta_y = velocity.y * direction.y * time.delta_seconds();
+
+        transform.translation.x += delta_x;
+        transform.translation.y += delta_y;
+
     }
 }
 
