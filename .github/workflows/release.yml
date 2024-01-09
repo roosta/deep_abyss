@@ -6,31 +6,6 @@ on:
       - "v*.*.*"
 
 jobs:
-  windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-
-      - name: Build for windows
-        run: |
-          cargo build --release
-          cd target/release
-          7z a -tzip deep_abyss_windows_${{github.ref_name}}.zip deep_abyss.exe ../../assets
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files:
-            target/release/deep_abyss_windows_${{github.ref_name}}.zip
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -59,3 +34,29 @@ jobs:
         with:
           files:
             target/release/deep_abyss_linux_${{github.ref_name}}.tar.gz
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: Build for windows
+        run: |
+          cargo build --release
+          cd target/release
+          7z a -tzip deep_abyss_windows_${{github.ref_name}}.zip deep_abyss.exe ../../assets
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files:
+            target/release/deep_abyss_windows_${{github.ref_name}}.zip
