@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 const PLAYER_SPEED: f32 = 400.0;
 
@@ -62,6 +63,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugins(WorldInspectorPlugin::new())
         .add_systems(Startup, setup)
         .add_systems(Update, (handle_input, apply_velocity).chain())
         .run();
