@@ -2,9 +2,16 @@ use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 const PLAYER_SPEED: f32 = 400.0;
+const PLAYER_SIZE: f32 = 32.;
+
+const RIGHT_WALL: f32 = 450.;
+const LEFT_WALL: f32 = -450.;
+const TOP_WALL: f32 = 300.;
+const BOTTOM_WALL: f32 = -300.;
 
 #[derive(Component, Deref, DerefMut)]
 struct Velocity(Vec2);
+
 
 #[derive(Component, Deref, DerefMut)]
 struct Direction(Vec2);
@@ -18,11 +25,16 @@ fn apply_velocity(
 ) {
     for (mut transform, velocity, direction) in &mut query {
 
-        let delta_x = velocity.x * direction.x * time.delta_seconds();
-        let delta_y = velocity.y * direction.y * time.delta_seconds();
+        let pos_x = transform.translation.x  + velocity.x * direction.x * time.delta_seconds();
+        let pos_y = transform.translation.y + velocity.y * direction.y * time.delta_seconds();
 
-        transform.translation.x += delta_x;
-        transform.translation.y += delta_y;
+        let left_bound = LEFT_WALL + PLAYER_SIZE / 2.0;
+        let right_bound = RIGHT_WALL - PLAYER_SIZE / 2.0;
+        let top_bound = TOP_WALL + PLAYER_SIZE / 2.0;
+        let bottom_bound = BOTTOM_WALL - PLAYER_SIZE / 2.0;
+
+        transform.translation.x = pos_x.clamp(left_bound, right_bound);
+        transform.translation.y = pos_y.clamp(bottom_bound, top_bound);
 
     }
 }
