@@ -28,14 +28,8 @@ fn apply_velocity(
         let pos_x = transform.translation.x  + velocity.x * direction.x * time.delta_seconds();
         let pos_y = transform.translation.y + velocity.y * direction.y * time.delta_seconds();
 
-        let left_bound = LEFT_WALL + PLAYER_SIZE / 2.0;
-        let right_bound = RIGHT_WALL - PLAYER_SIZE / 2.0;
-        let top_bound = TOP_WALL + PLAYER_SIZE / 2.0;
-        let bottom_bound = BOTTOM_WALL - PLAYER_SIZE / 2.0;
-
-        transform.translation.x = pos_x.clamp(left_bound, right_bound);
-        transform.translation.y = pos_y.clamp(bottom_bound, top_bound);
-
+        transform.translation.x = pos_x.clamp(LEFT_WALL, RIGHT_WALL);
+        transform.translation.y = pos_y.clamp(BOTTOM_WALL, TOP_WALL);
     }
 }
 
