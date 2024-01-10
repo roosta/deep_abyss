@@ -1,0 +1,20 @@
+# File: cog.toml
+pre_bump_hooks = [
+  "echo {{version}}",
+]
+
+
+post_bump_hooks = [
+  "git push",
+  "git push origin {{version}}",
+]
+
+[changelog]
+path = "CHANGELOG.md"
+template = "remote"
+remote = "github.com"
+repository = "deep_abyss"
+owner = "roosta"
+authors = [
+{ username = "roosta", signature = "Daniel Berg"}
+]
