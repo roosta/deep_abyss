@@ -68,9 +68,12 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(
+            ImagePlugin::default_nearest(),
+        ))
         .add_plugins(WorldInspectorPlugin::new())
         .add_systems(Startup, setup)
         .add_systems(Update, (handle_input, apply_velocity).chain())
         .run();
 }
+
