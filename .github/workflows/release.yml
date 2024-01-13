@@ -1,3 +1,4 @@
+name: Release new version
 on:
   workflow_dispatch:
     branches: main
