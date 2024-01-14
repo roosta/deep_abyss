@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_ecs_ldtk::prelude::*;
 
 const PLAYER_SPEED: f32 = 400.0;
 const PLAYER_SIZE: f32 = 32.;
@@ -11,7 +12,6 @@ const BOTTOM_WALL: f32 = -300.;
 
 #[derive(Component, Deref, DerefMut)]
 struct Velocity(Vec2);
-
 
 #[derive(Component, Deref, DerefMut)]
 struct Direction(Vec2);
@@ -64,6 +64,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     Velocity(Vec2::new(PLAYER_SPEED, PLAYER_SPEED)),
     Direction(Vec2::new(0., 0.))
     ));
+    commands.spawn(LdtkWorldBundle {
+        ldtk_handle: asset_server.load("deep_abyss.ldtk"),
+        ..Default::default()
+    });
 }
 
 fn main() {
@@ -71,6 +75,8 @@ fn main() {
         .add_plugins(DefaultPlugins.set(
             ImagePlugin::default_nearest(),
         ))
+        .add_plugins(LdtkPlugin)
+        .insert_resource(LevelSelection::index(0))
         .add_plugins(WorldInspectorPlugin::new())
         .add_systems(Startup, setup)
         .add_systems(Update, (handle_input, apply_velocity).chain())
