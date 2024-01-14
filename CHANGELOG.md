@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.3.0](https://github.com/roosta/deep_abyss/compare/0.2.2..0.3.0) - 2024-01-14
+#### Continuous Integration
+- use PAT for checkout - ([860b966](https://github.com/roosta/deep_abyss/commit/860b9668b2963e29d1d495e2cf80a372de71cef8)) - [@roosta](https://github.com/roosta)
+- update step names - ([d4f97e1](https://github.com/roosta/deep_abyss/commit/d4f97e116b0c65c79c709d083d3673e933a1575d)) - [@roosta](https://github.com/roosta)
+- fix release syntax error - ([c35ca3a](https://github.com/roosta/deep_abyss/commit/c35ca3ad2b79937eb2e5e9197e7726298832dfb5)) - [@roosta](https://github.com/roosta)
+- set names for workflows - ([aed5d73](https://github.com/roosta/deep_abyss/commit/aed5d73e70e3e4cd53c74990fd68cdb66566879a)) - [@roosta](https://github.com/roosta)
+- separate release/build, add check - ([f43586b](https://github.com/roosta/deep_abyss/commit/f43586b706a5ddc568f249e2de84d3f0af17b3f2)) - [@roosta](https://github.com/roosta)
+#### Features
+- set filtering to nearest - ([0d653c8](https://github.com/roosta/deep_abyss/commit/0d653c8c35696a831c38df93812d32b70ffa91dc)) - [@roosta](https://github.com/roosta)
+- - -
+
 ## [0.2.2](https://github.com/roosta/deep_abyss/compare/1a6719c1d75238091ab0c80c58d67d4bcc20e520..0.2.2) - 2024-01-13
 #### Bug Fixes
 - clamp player position - ([76ba55d](https://github.com/roosta/deep_abyss/commit/76ba55d8c137f2a9cea817720897d10c6838c2b6)) - [@roosta](https://github.com/roosta)
