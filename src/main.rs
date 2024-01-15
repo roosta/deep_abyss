@@ -1,26 +1,54 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_ecs_ldtk::prelude::*;
+use std::collections::HashSet;
 
-const PLAYER_SPEED: f32 = 400.0;
+const PLAYER_SPEED: f32 = 200.0;
 const PLAYER_SIZE: f32 = 32.;
+const GRID_SIZE: i32 = 16;
 
-const RIGHT_WALL: f32 = 450.;
-const LEFT_WALL: f32 = -450.;
-const TOP_WALL: f32 = 300.;
-const BOTTOM_WALL: f32 = -300.;
-
-#[derive(Component, Deref, DerefMut)]
+#[derive(Default, Component, Deref, DerefMut)]
 struct Velocity(Vec2);
 
-#[derive(Component, Deref, DerefMut)]
+#[derive(Default, Component, Deref, DerefMut)]
 struct Direction(Vec2);
 
-#[derive(Component)]
+#[derive(Default, Component)]
 struct Player;
 
+
+#[derive(Default, Component)]
+struct Wall;
+
+#[derive(Default, Bundle, LdtkIntCell)]
+struct WallBundle {
+    wall: Wall,
+}
+
+// #[derive(Default, Resource)]
+// struct LevelWalls {
+//     wall_locations: HashSet<GridCoords>,
+//     level_width: i32,
+//     level_height: i32,
+// }
+
+#[derive(Default, Bundle, LdtkEntity)]
+struct PlayerBundle {
+    player: Player,
+    #[with(init_velocity)]
+    velocity: Velocity,
+    // #[with(init_direction)]
+    direction: Direction,
+    #[sprite_sheet_bundle]
+    sprite_bundle: SpriteSheetBundle,
+}
+
+fn init_velocity(_: &EntityInstance) -> Velocity {
+    Velocity(Vec2::new(PLAYER_SPEED, PLAYER_SPEED))
+}
+
 fn apply_velocity(
-    mut query: Query<(&mut Transform, &Velocity, &Direction)>,
+    mut query: Query<(&mut Transform, &Velocity, &Direction), With<Player>>,
     time: Res<Time>,
 ) {
     for (mut transform, velocity, direction) in &mut query {
@@ -28,42 +56,39 @@ fn apply_velocity(
         let pos_x = transform.translation.x  + velocity.x * direction.x * time.delta_seconds();
         let pos_y = transform.translation.y + velocity.y * direction.y * time.delta_seconds();
 
-        transform.translation.x = pos_x.clamp(LEFT_WALL, RIGHT_WALL);
-        transform.translation.y = pos_y.clamp(BOTTOM_WALL, TOP_WALL);
+        transform.translation.x = pos_x;
+        transform.translation.y = pos_y;
     }
 }
 
 fn handle_input(
     keys: Res<Input<KeyCode>>,
-    mut query: Query<&mut Direction>
+    mut query: Query<&mut Direction, With<Player>>
 ) {
-    let mut direction = query.single_mut();
-    direction.x = 0.;
-    direction.y = 0.;
-    if keys.pressed(KeyCode::Left) {
-        direction.x = -1.;
-    }
-    if keys.pressed(KeyCode::Right) {
-        direction.x = 1.;
-    }
-    if keys.pressed(KeyCode::Up) {
-        direction.y = 1.;
-    }
-    if keys.pressed(KeyCode::Down) {
-        direction.y = -1.;
+    for mut direction in query.iter_mut() {
+        direction.x = 0.;
+        direction.y = 0.;
+        if keys.pressed(KeyCode::Left) || keys.pressed(KeyCode::A) {
+            direction.x = -1.;
+        }
+        if keys.pressed(KeyCode::Right) || keys.pressed(KeyCode::D) {
+            direction.x = 1.;
+        }
+        if keys.pressed(KeyCode::Up) || keys.pressed(KeyCode::W) {
+            direction.y = 1.;
+        }
+        if keys.pressed(KeyCode::Down) || keys.pressed(KeyCode::S) {
+            direction.y = -1.;
+        }
     }
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle::default());
-    commands.spawn((SpriteBundle {
-        texture: asset_server.load("player/placeholder.png"),
-        ..default()
-    },
-    Player,
-    Velocity(Vec2::new(PLAYER_SPEED, PLAYER_SPEED)),
-    Direction(Vec2::new(0., 0.))
-    ));
+    let mut camera = Camera2dBundle::default();
+    camera.projection.scale = 0.5;
+    // camera.transform.translation.x += 1280.0 / 4.0;
+    // camera.transform.translation.y += 720.0 / 4.0;
+    commands.spawn(camera);
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: asset_server.load("deep_abyss.ldtk"),
         ..Default::default()
@@ -72,13 +97,14 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins.set(
-            ImagePlugin::default_nearest(),
-        ))
+        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugins(LdtkPlugin)
         .insert_resource(LevelSelection::index(0))
         .add_plugins(WorldInspectorPlugin::new())
         .add_systems(Startup, setup)
+        .register_ldtk_entity::<PlayerBundle>("Player")
+        // .register_ldtk_int_cell::<WallBundle>(1)
+        // .init_resource::<LevelWalls>()
         .add_systems(Update, (handle_input, apply_velocity).chain())
         .run();
 }
