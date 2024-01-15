@@ -28,6 +28,17 @@ missing assets.
 This will be improved later, but the releases are packaged with the assets.
 
 
+## LDtk
+
+The levels used in this game is created in [LDtk](https://ldtk.io/), version `1.4.1`
+
+## Placeholder assets
+
+These will be removed eventually, but we need something to test against initially.
+
+- [Inca Game Assets by Kronbits](https://kronbits.itch.io/inca-game-assets)
+- [Sunny Land - Pixel Game Art by ansimuz](https://ansimuz.itch.io/sunny-land-pixel-game-art)
+
 ## License
 
 - Copyright (c) 2024 Daniel Berg
