@@ -14,7 +14,7 @@
 	"nextUid": 67,
 	"identifierStyle": "Capitalize",
 	"toc": [],
-	"worldLayout": "LinearHorizontal",
+	"worldLayout": "LinearVertical",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
 	"defaultLevelWidth": 256,
@@ -37,6 +37,7 @@
 	"backupLimit": 10,
 	"backupRelPath": null,
 	"levelNamePattern": "%world_Level_%idx",
+	"tutorialDesc": null,
 	"customCommands": [],
 	"flags": ["UseMultilinesType"],
 	"defs": { "layers": [
@@ -746,7 +747,7 @@
 	], "enums": [], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
-			"identifier": "Mosaic_demo",
+			"identifier": "Biome_1",
 			"iid": "a2b00c70-66b0-11ec-9cd7-cfc05854da53",
 			"uid": 0,
 			"worldX": -1,
