@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.4.0](https://github.com/roosta/deep_abyss/compare/0.3.0..0.4.0) - 2024-01-16
+#### Bug Fixes
+- **(lvl)** remove copypaste tutorial description - ([e78cd01](https://github.com/roosta/deep_abyss/commit/e78cd010a24ff335c049b3cb8e8a1236b3db8c59)) - [@roosta](https://github.com/roosta)
+- **(lvl)** downgrade ldtk to 1.4.1 - ([5889aae](https://github.com/roosta/deep_abyss/commit/5889aaedaab5a2ee23626b8259690f03b46b3df8)) - [@roosta](https://github.com/roosta)
+- fix camera pos - ([2db2718](https://github.com/roosta/deep_abyss/commit/2db271868d21e2ee3b80e4e7e1a8577a02fe8961)) - [@roosta](https://github.com/roosta)
+#### Documentation
+- add LDtk + asset note - ([a9c7a82](https://github.com/roosta/deep_abyss/commit/a9c7a82c547ddf16333411022648608e0f914c54)) - [@roosta](https://github.com/roosta)
+#### Features
+- **(lfs)** add placeholder spritesheet - ([386b707](https://github.com/roosta/deep_abyss/commit/386b707a43190435789faa70e8fa75621cb959a6)) - [@roosta](https://github.com/roosta)
+- **(lfs)** add temporary atlas files - ([6d1c6eb](https://github.com/roosta/deep_abyss/commit/6d1c6eb7b4af585a2ec10cdd89e2d5b929690e45)) - [@roosta](https://github.com/roosta)
+- **(lfs)** resize player to 16x16 - ([613de89](https://github.com/roosta/deep_abyss/commit/613de894dd9c5e4cc5683039c00bb89ce8049b41)) - [@roosta](https://github.com/roosta)
+- **(lvl)** change identifier, world layout - ([27d7048](https://github.com/roosta/deep_abyss/commit/27d7048a5d87c0841bbc2e99474de56effd03e55)) - [@roosta](https://github.com/roosta)
+- **(lvl)** add player entity - ([9a4f991](https://github.com/roosta/deep_abyss/commit/9a4f991e45dada35995894b40a76ac5c3ea5fd39)) - [@roosta](https://github.com/roosta)
+- **(lvl)** add initial project ldtk file - ([1f73420](https://github.com/roosta/deep_abyss/commit/1f734209e4e13718143756616c43ac040b50f460)) - [@roosta](https://github.com/roosta)
+- load player from level data - ([d212f82](https://github.com/roosta/deep_abyss/commit/d212f82919845c4b4fd4a579697b8ffb2e169a2b)) - [@roosta](https://github.com/roosta)
+- setup ldtk - ([d0dfce1](https://github.com/roosta/deep_abyss/commit/d0dfce138a3fd76069f7b4ca3f2cffd8727afb10)) - [@roosta](https://github.com/roosta)
+
+- - -
+
 ## [0.3.0](https://github.com/roosta/deep_abyss/compare/0.2.2..0.3.0) - 2024-01-14
 #### Continuous Integration
 - use PAT for checkout - ([860b966](https://github.com/roosta/deep_abyss/commit/860b9668b2963e29d1d495e2cf80a372de71cef8)) - [@roosta](https://github.com/roosta)
