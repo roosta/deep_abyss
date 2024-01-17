@@ -1,8 +1,7 @@
 use bevy::{
     prelude::*,
-    sprite::collide_aabb::{collide, Collision},
 };
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_inspector_egui::quick::FilterQueryInspectorPlugin;
 use bevy_ecs_ldtk::prelude::*;
 use std::collections::{HashMap, HashSet};
 use rand::Rng;
@@ -12,30 +11,88 @@ use rand::Rng;
 #[derive(Default, Component)]
 struct Collider;
 
-const PLAYER_SPEED: f32 = 200.0;
-// const PLAYER_SIZE: f32 = 32.;
-// const GRID_SIZE: i32 = 16;
+const GRID_SIZE: f32 = 16.;
+const PLAYER_SIZE: Vec2 = Vec2::new(GRID_SIZE, GRID_SIZE);
+const ACCELERATION: f32 = 200.;
+const MAX_MOVE_SPEED: f32 = 100.;
+const DRAG_FACTOR: f32 = 0.50;
 
-#[derive(Event, Default)]
-struct CollisionEvent;
-
-#[derive(Default, Component, Deref, DerefMut)]
+#[derive(Reflect, Default, Debug, Component, Deref, DerefMut)]
 struct Velocity(Vec2);
 
-#[derive(Default, Component, Deref, DerefMut)]
+#[derive(Default, Debug, Component, Deref, DerefMut)]
 struct Direction(Vec2);
 
-#[derive(Default, Component)]
+#[derive(Default, Component, Reflect)]
 struct Player;
 
 #[derive(Default, Component)]
 struct Wall;
 
+#[derive(Default, Component, Debug, Deref)]
+struct ColliderSize(Vec2);
+
 #[derive(Bundle, Default, LdtkIntCell)]
 struct WallBundle {
     wall: Wall,
-    collider: Collider
 }
+
+struct DebugPlugin;
+
+enum CollisionAxis {
+    X,
+    Y
+}
+
+fn _update_print(
+    query: Query<(&Velocity, &Transform), With<Player>>,
+) {
+    for (velocity, transform) in &query {
+        println!(
+            "Velocity: [{:#?}, {:#?}], [{:#?}, {:#?}]",
+            velocity.x,
+            velocity.y,
+            transform.translation.x,
+            transform.translation.y
+        )
+    }
+}
+
+impl Plugin for DebugPlugin {
+    fn build(&self, app: &mut App) {
+        if cfg!(debug_assertions) {
+            app.add_plugins(FilterQueryInspectorPlugin::<With<Player>>::default());
+            // app.add_plugins(FilterQueryInspectorPlugin::<With<Collider>>::default());
+            app.register_type::<Velocity>();
+            // app.add_systems(Update, _update_print);
+        }
+    }
+}
+
+
+/// Represents a wide wall that is 1 tile tall
+/// Used to spawn wall collisions
+#[derive(Clone, Eq, PartialEq, Debug, Default, Hash)]
+struct Plate {
+    left: i32,
+    right: i32,
+}
+
+/// A simple rectangle type representing a wall of any size
+struct WallRect {
+    left: i32,
+    right: i32,
+    top: i32,
+    bottom: i32,
+}
+
+#[derive(Bundle, Default, LdtkIntCell)]
+struct ColliderBundle {
+    sprite_bundle: SpriteBundle,
+    collider: Collider,
+    size: ColliderSize,
+}
+
 
 // #[derive(Default, Resource)]
 // struct LevelWalls {
@@ -47,35 +104,150 @@ struct WallBundle {
 #[derive(Default, Bundle, LdtkEntity)]
 struct PlayerBundle {
     player: Player,
-    #[with(init_velocity)]
     velocity: Velocity,
     direction: Direction,
-    collision: Collider,
     #[sprite_sheet_bundle]
     sprite_bundle: SpriteSheetBundle,
 }
 
-fn init_velocity(_: &EntityInstance) -> Velocity {
-    Velocity(Vec2::new(PLAYER_SPEED, PLAYER_SPEED))
-}
-
-fn apply_velocity(
-    mut query: Query<(&mut Transform, &Velocity, &Direction), With<Player>>,
+fn update_velocity(
+    mut query: Query<(&mut Velocity, &Direction), With<Player>>,
     time: Res<Time>,
 ) {
-    for (mut transform, velocity, direction) in &mut query {
+    for (mut velocity, direction) in &mut query {
+        velocity.x = velocity.x.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
+        velocity.y = velocity.y.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
+        velocity.x += direction.x * ACCELERATION * time.delta_seconds();
+        velocity.y += direction.y * ACCELERATION * time.delta_seconds();
+        velocity.x *= DRAG_FACTOR;
+        velocity.y *= DRAG_FACTOR;
 
-        let pos_x = transform.translation.x  + velocity.x * direction.x * time.delta_seconds();
-        let pos_y = transform.translation.y + velocity.y * direction.y * time.delta_seconds();
-
-        transform.translation.x = pos_x;
-        transform.translation.y = pos_y;
     }
 }
 
-fn check_collisions(
+/// Build up a vector of intersection rects from collider query and player.
+fn intersect_rects(
+    query: &Query<(&Transform, &ColliderSize), (With<Collider>, Without<Player>)>,
+    player_translation: Vec3
+) -> Vec<Rect> {
+
+    let mut ret = Vec::new();
+    for (transform, size) in query {
+
+        let rect_a = Rect::from_center_size(
+            Vec2::new(
+                player_translation.x,
+                player_translation.y
+            ),
+            PLAYER_SIZE
+        );
+        let rect_b = Rect::from_center_size(
+            Vec2::new(
+                transform.translation.x,
+                transform.translation.y
+            ),
+            size.0
+        );
+
+        let intersect_rect = rect_a.intersect(rect_b);
+        if !intersect_rect.is_empty() {
+            ret.push(intersect_rect);
+        }
+    }
+    ret
+}
+
+/// Set player translation for each intesect rect along an axis
+fn handle_collisions(
+    collider_query: &Query<(&Transform, &ColliderSize), (With<Collider>, Without<Player>)>,
+    velocity: &Velocity,
+    transform: &mut Transform,
+    axis: CollisionAxis,
+) {
+
+    for rect in intersect_rects(&collider_query, transform.translation) {
+        let size = rect.size();
+        match axis {
+            CollisionAxis::X => {
+                if velocity.x < 0. {
+                    transform.translation.x += size.x;
+                } else if velocity.x > 0. {
+                    transform.translation.x -= size.x;
+                }
+            },
+            CollisionAxis::Y => {
+                if velocity.y < 0. {
+                    transform.translation.y += size.y;
+                } else if velocity.y > 0. {
+                    transform.translation.y -= size.y;
+                }
+            }
+        }
+    }
+}
+
+/// Move player by mutating transform, and check collisions, push player out by the size of the
+/// intersect rectangle when collision is detect
+fn move_player(
+    mut query: Query<(&mut Velocity, &mut Transform), With<Player>>,
+    collider_query: Query<(&Transform, &ColliderSize), (With<Collider>, Without<Player>)>,
+    ) {
+    for (mut velocity, mut transform) in &mut query {
+
+        let prev = transform.translation.clone();
+
+        let half_x = velocity.x / 2.;
+        let half_y = velocity.y / 2.;
+
+        // Horizontal collisions
+        if velocity.x > 0. || velocity.x < 0. {
+            transform.translation.x += half_x;
+            handle_collisions(
+                &collider_query,
+                &mut velocity,
+                &mut transform,
+                CollisionAxis::X
+            );
+            transform.translation.x += half_x;
+            handle_collisions(
+                &collider_query,
+                &mut velocity,
+                &mut transform,
+                CollisionAxis::X
+            );
+        }
+
+        // Vertical collisions
+        if velocity.y > 0. || velocity.y < 0. {
+            transform.translation.y += half_y;
+            handle_collisions(
+                &collider_query,
+                &mut velocity,
+                &mut transform,
+                CollisionAxis::Y
+            );
+            transform.translation.y += half_y;
+            handle_collisions(
+                &collider_query,
+                &mut velocity,
+                &mut transform,
+                CollisionAxis::Y
+            );
+        }
+
+        // Ensure velocity doesn't trail off in smaller and smaller increments
+        if (prev.x - transform.translation.x).abs() < f32::EPSILON {
+            velocity.x = 0.;
+        }
+        if (prev.y - transform.translation.y).abs() < f32::EPSILON {
+            velocity.y = 0.;
+        }
+
+    }
+}
+
+fn spawn_collisions(
     mut commands: Commands,
-    mut collision_events: EventWriter<CollisionEvent>,
     wall_query: Query<(&GridCoords, &Parent), Added<Wall>>,
     parent_query: Query<&Parent, Without<Wall>>,
     level_query: Query<(Entity, &LevelIid)>,
@@ -84,22 +256,6 @@ fn check_collisions(
     // mut player_query: Query<(&mut Velocity, &Transform), With<Player>>,
     // collider_query: Query<(Entity, &Transform, &Wall), With<Collider>>,
 ) {
-
-    /// Represents a wide wall that is 1 tile tall
-    /// Used to spawn wall collisions
-    #[derive(Clone, Eq, PartialEq, Debug, Default, Hash)]
-    struct Plate {
-        left: i32,
-        right: i32,
-    }
-
-    /// A simple rectangle type representing a wall of any size
-    struct Rect {
-        left: i32,
-        right: i32,
-        top: i32,
-        bottom: i32,
-    }
 
     let mut rng = rand::thread_rng();
 
@@ -166,9 +322,9 @@ fn check_collisions(
                 }
 
                 // combine "plates" into rectangles across multiple rows
-                let mut rect_builder: HashMap<Plate, Rect> = HashMap::new();
+                let mut rect_builder: HashMap<Plate, WallRect> = HashMap::new();
                 let mut prev_row: Vec<Plate> = Vec::new();
-                let mut wall_rects: Vec<Rect> = Vec::new();
+                let mut wall_rects: Vec<WallRect> = Vec::new();
 
                 // an extra empty row so the algorithm "finishes" the rects that touch the top edge
                 plate_stack.push(Vec::new());
@@ -186,7 +342,7 @@ fn check_collisions(
                         rect_builder
                             .entry(plate.clone())
                             .and_modify(|e| e.top += 1)
-                            .or_insert(Rect {
+                            .or_insert(WallRect {
                                 bottom: y as i32,
                                 top: y as i32,
                                 left: plate.left,
@@ -205,26 +361,25 @@ fn check_collisions(
                         let red: f32 = rng.gen_range(0.0..1.0);
                         let green: f32 = rng.gen_range(0.0..1.0);
                         let blue: f32 = rng.gen_range(0.0..1.0);
-                        level.spawn(SpriteBundle {
-                                sprite: Sprite {
-                                    color: Color::rgb(red, green, blue),
-                                    custom_size: Some(Vec2::new(
-                                            (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
-                                            * grid_size as f32,
-                                            (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                            * grid_size as f32,
-                                            )),
+                        let width = (wall_rect.right as f32 - wall_rect.left as f32 + 1.) * grid_size as f32;
+                        let height = (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.) * grid_size as f32;
+                        let center_x = (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32 / 2.;
+                        let center_y = (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32 / 2.;
+                        let z_index =  0.;
+                        level.spawn(
+                            ColliderBundle {
+                                sprite_bundle: SpriteBundle {
+                                    sprite: Sprite {
+                                        color: Color::rgb(red, green, blue),
+                                        custom_size: Some(Vec2::new(width, height)),
                                         ..default()
+                                    },
+                                    transform: Transform::from_xyz(center_x, center_y, z_index),
+                                    ..default()
                                 },
-                                transform: Transform::from_xyz(
-                                    (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
-                                    / 2.,
-                                    (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
-                                    / 2.,
-                                    50.,
-                                    ),
-                                ..default()
-                            }
+                                size: ColliderSize(Vec2::new(width, height)),
+                                collider: Collider
+                            },
                         );
                     }
                 });
@@ -240,21 +395,20 @@ fn handle_input(
     for mut direction in query.iter_mut() {
         direction.x = 0.;
         direction.y = 0.;
-        if keys.pressed(KeyCode::Left) || keys.pressed(KeyCode::A) {
+        if keys.pressed(KeyCode::Left)  || keys.pressed(KeyCode::A) {
             direction.x = -1.;
         }
         if keys.pressed(KeyCode::Right) || keys.pressed(KeyCode::D) {
             direction.x = 1.;
         }
-        if keys.pressed(KeyCode::Up) || keys.pressed(KeyCode::W) {
+        if keys.pressed(KeyCode::Up)    || keys.pressed(KeyCode::W) {
             direction.y = 1.;
         }
-        if keys.pressed(KeyCode::Down) || keys.pressed(KeyCode::S) {
+        if keys.pressed(KeyCode::Down)  || keys.pressed(KeyCode::S) {
             direction.y = -1.;
         }
     }
 }
-
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut camera = Camera2dBundle::default();
     camera.projection.scale = 0.5;
@@ -269,17 +423,23 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .add_plugins((
+                DefaultPlugins.set(ImagePlugin::default_nearest()),
+                DebugPlugin,
+                ))
         .add_plugins(LdtkPlugin)
         .insert_resource(LevelSelection::index(0))
-        .add_plugins(WorldInspectorPlugin::new())
-        .add_event::<CollisionEvent>()
         .add_systems(Startup, setup)
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_int_cell::<WallBundle>(1)
         // .init_resource::<LevelWalls>()
         .add_systems(Update,
-            (handle_input, check_collisions, apply_velocity).chain())
+            (
+                handle_input,
+                spawn_collisions,
+                update_velocity,
+                move_player,
+            ))
         .run();
 }
 

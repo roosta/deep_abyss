@@ -11,7 +11,7 @@
 	"iid": "a2533480-7820-11ed-b6fd-e9108160ae94",
 	"jsonVersion": "1.4.1",
 	"appBuildId": 473702,
-	"nextUid": 67,
+	"nextUid": 68,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "LinearVertical",
@@ -665,16 +665,16 @@
 			"color": "#0099DB",
 			"renderMode": "Tile",
 			"showName": true,
-			"tilesetId": 66,
+			"tilesetId": 67,
 			"tileRenderMode": "FitInside",
-			"tileRect": { "tilesetUid": 66, "x": 0, "y": 0, "w": 32, "h": 32 },
+			"tileRect": { "tilesetUid": 67, "x": 0, "y": 0, "w": 16, "h": 16 },
 			"uiTileRect": null,
 			"nineSliceBorders": [],
-			"maxCount": 0,
-			"limitScope": "PerLevel",
+			"maxCount": 1,
+			"limitScope": "PerWorld",
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0,
-			"pivotY": 0,
+			"pivotY": 1,
 			"fieldDefs": []
 		}
 	], "tilesets": [
@@ -743,6 +743,25 @@
 				"opaqueTiles": "000000100000010000001000000100000010000001",
 				"averageColors": "49654965496549650000000000004a65596549654955495449650000585459545854595400000000000049654965496500000000000000005a775a87000000000000000000004965596500000000000000000000"
 			}
+		},
+		{
+			"__cWid": 1,
+			"__cHei": 1,
+			"identifier": "Placeholder",
+			"uid": 67,
+			"relPath": "player/placeholder.png",
+			"embedAtlas": null,
+			"pxWid": 16,
+			"pxHei": 16,
+			"tileGridSize": 16,
+			"spacing": 0,
+			"padding": 0,
+			"tags": [],
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "1", "averageColors": "f48a" }
 		}
 	], "enums": [], "externalEnums": [], "levelFields": [] },
 	"levels": [
@@ -793,18 +812,18 @@
 					"entityInstances": [
 						{
 							"__identifier": "Player",
-							"__grid": [8,8],
-							"__pivot": [0,0],
+							"__grid": [4,8],
+							"__pivot": [0,1],
 							"__tags": [],
-							"__tile": { "tilesetUid": 66, "x": 0, "y": 0, "w": 32, "h": 32 },
+							"__tile": { "tilesetUid": 67, "x": 0, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#0099DB",
-							"__worldX": 128,
-							"__worldY": 128,
+							"__worldX": 64,
+							"__worldY": 144,
 							"iid": "b03fc3a0-b0a0-11ee-875b-57be88515a41",
 							"width": 16,
 							"height": 16,
 							"defUid": 64,
-							"px": [128,128],
+							"px": [64,144],
 							"fieldInstances": []
 						}
 					]
