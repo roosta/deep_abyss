@@ -5,6 +5,7 @@ use bevy::{
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_ecs_ldtk::prelude::*;
 use std::collections::{HashMap, HashSet};
+use rand::Rng;
 
 // use std::collections::HashSet;
 
@@ -99,6 +100,8 @@ fn check_collisions(
         top: i32,
         bottom: i32,
     }
+
+    let mut rng = rand::thread_rng();
 
     // Consider where the walls are
     // storing them as GridCoords in a HashSet for quick, easy lookup
@@ -199,9 +202,12 @@ fn check_collisions(
                     // 1. Adjusts the transforms to be relative to the level for free
                     // 2. the colliders will be despawned automatically when levels unload
                     for wall_rect in wall_rects {
+                        let red: f32 = rng.gen_range(0.0..1.0);
+                        let green: f32 = rng.gen_range(0.0..1.0);
+                        let blue: f32 = rng.gen_range(0.0..1.0);
                         level.spawn(SpriteBundle {
                                 sprite: Sprite {
-                                    color: Color::rgb(0.25, 0.25, 0.75),
+                                    color: Color::rgb(red, green, blue),
                                     custom_size: Some(Vec2::new(
                                             (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
                                             * grid_size as f32,
