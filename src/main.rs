@@ -1,17 +1,12 @@
-use bevy:: prelude::*;
-use bevy_inspector_egui::quick::FilterQueryInspectorPlugin;
-use bevy_ecs_ldtk::prelude::*;
-
-// use std::collections::HashSet;
-
-struct DebugPlugin;
-
 mod player;
 mod tilemap;
+mod debug;
+
+use bevy:: prelude::*;
+use bevy_ecs_ldtk::prelude::*;
+use debug::DebugPlugin;
 
 use player::{
-    Player,
-    Velocity,
     PlayerBundle,
     PlayerPlugin,
 };
@@ -20,34 +15,6 @@ use tilemap::{
     TilemapPlugin,
     ZIndex,
 };
-
-fn _update_print(
-    query: Query<(&Velocity, &Transform), With<Player>>,
-) {
-    for (velocity, transform) in &query {
-        println!(
-            "Velocity: [{:#?}, {:#?}], [{:#?}, {:#?}]",
-            velocity.x,
-            velocity.y,
-            transform.translation.x,
-            transform.translation.y
-        )
-    }
-}
-
-impl Plugin for DebugPlugin {
-    fn build(&self, app: &mut App) {
-        if cfg!(debug_assertions) {
-            app.add_plugins(FilterQueryInspectorPlugin::<With<Player>>::default());
-            // app.add_plugins(FilterQueryInspectorPlugin::<With<Collider>>::default());
-            app.register_type::<Velocity>();
-            // app.add_systems(Update, _update_print);
-        }
-    }
-}
-
-
-
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut camera = Camera2dBundle::default();
