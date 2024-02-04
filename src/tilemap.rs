@@ -42,6 +42,10 @@ pub struct WallBundle {
 
 pub struct TilemapPlugin;
 
+#[derive(Reflect, Resource, Default)]
+#[reflect(Resource)]
+pub struct ZIndex(pub f32);
+
 // #[derive(Default, Resource)]
 // struct LevelWalls {
 //     wall_locations: HashSet<GridCoords>,
@@ -78,6 +82,7 @@ fn spawn_collisions(
     level_query: Query<(Entity, &LevelIid)>,
     ldtk_projects: Query<&Handle<LdtkProject>>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
+    z_index: Res<ZIndex>,
     // mut player_query: Query<(&mut Velocity, &Transform), With<Player>>,
     // collider_query: Query<(Entity, &Transform, &Wall), With<Collider>>,
 ) {
@@ -190,7 +195,6 @@ fn spawn_collisions(
                         let height = (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.) * grid_size as f32;
                         let center_x = (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32 / 2.;
                         let center_y = (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32 / 2.;
-                        let z_index =  0.;
                         level.spawn(
                             ColliderBundle {
                                 sprite_bundle: SpriteBundle {
@@ -199,7 +203,7 @@ fn spawn_collisions(
                                         custom_size: Some(Vec2::new(width, height)),
                                         ..default()
                                     },
-                                    transform: Transform::from_xyz(center_x, center_y, z_index),
+                                    transform: Transform::from_xyz(center_x, center_y, z_index.0),
                                     ..default()
                                 },
                                 size: ColliderSize(Vec2::new(width, height)),

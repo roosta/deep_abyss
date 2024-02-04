@@ -18,6 +18,7 @@ use player::{
 use tilemap::{
     WallBundle,
     TilemapPlugin,
+    ZIndex,
 };
 
 fn _update_print(
@@ -70,6 +71,7 @@ fn main() {
                 ))
         .add_plugins(LdtkPlugin)
         .insert_resource(LevelSelection::index(0))
+        .insert_resource(ZIndex(0.))
         .add_systems(Startup, setup)
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_int_cell::<WallBundle>(1)
