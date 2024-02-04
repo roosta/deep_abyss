@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.5.0](https://github.com/roosta/deep_abyss/compare/0.4.0..0.5.0) - 2024-02-04
+#### Documentation
+- update spawn_collisions docstring - ([29bd72f](https://github.com/roosta/deep_abyss/commit/29bd72fb6056ceb5a806f3f78fdaf6f9af5f9cd2)) - [@roosta](https://github.com/roosta)
+#### Features
+- **(dev)** enable asset hot reloading - ([9083c70](https://github.com/roosta/deep_abyss/commit/9083c705c07bea600dee35c25a3be6dc36038608)) - [@roosta](https://github.com/roosta)
+- **(dev)** create custom debug UI - ([2349600](https://github.com/roosta/deep_abyss/commit/2349600b1b8f07306db1ba8c5310f2bc50c85e47)) - [@roosta](https://github.com/roosta)
+- add ZIndex debug resource - ([1e6452a](https://github.com/roosta/deep_abyss/commit/1e6452af7a52c234ef69ce530d242e15c9f2dc18)) - [@roosta](https://github.com/roosta)
+- add player map wall collision handling - ([45b646c](https://github.com/roosta/deep_abyss/commit/45b646c12f1a55e22fa8ebb7ae3afbcbb82f42ef)) - [@roosta](https://github.com/roosta)
+- use random color for each collision block - ([511bae7](https://github.com/roosta/deep_abyss/commit/511bae7b6a590907358ca950d8a0345607a83cf1)) - [@roosta](https://github.com/roosta)
+- add rand dependency - ([f225b37](https://github.com/roosta/deep_abyss/commit/f225b37118afed0e2e23ca3e7a8bc956cb06d74f)) - [@roosta](https://github.com/roosta)
+- render collision grid - ([c2cfae9](https://github.com/roosta/deep_abyss/commit/c2cfae97af00095c9bffd513d32581a489b10a60)) - [@roosta](https://github.com/roosta)
+#### Miscellaneous Chores
+- upgrade tilemap libs & LDtk project - ([535ce96](https://github.com/roosta/deep_abyss/commit/535ce96f07e90107a057587cc4a780c4f92a6021)) - [@roosta](https://github.com/roosta)
+#### Refactoring
+- move debug code to new module - ([70630c8](https://github.com/roosta/deep_abyss/commit/70630c880343a1b919046c90ea9302e76425ad21)) - [@roosta](https://github.com/roosta)
+- change player & tilemap to plugins - ([562bd5a](https://github.com/roosta/deep_abyss/commit/562bd5a09dae548194b9310e9061a4a4ff442654)) - [@roosta](https://github.com/roosta)
+
+- - -
+
 ## [0.4.0](https://github.com/roosta/deep_abyss/compare/0.3.0..0.4.0) - 2024-01-16
 #### Bug Fixes
 - **(lvl)** remove copypaste tutorial description - ([e78cd01](https://github.com/roosta/deep_abyss/commit/e78cd010a24ff335c049b3cb8e8a1236b3db8c59)) - [@roosta](https://github.com/roosta)
