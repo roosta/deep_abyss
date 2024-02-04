@@ -34,8 +34,8 @@ enum CollisionAxis {
 #[derive(Reflect, Default, Debug, Component, Deref, DerefMut)]
 pub struct Velocity(Vec2);
 
-#[derive(Default, Debug, Component, Deref, DerefMut)]
-struct Direction(Vec2);
+#[derive(Reflect, Default, Debug, Component, Deref, DerefMut)]
+pub struct Direction(Vec2);
 
 pub struct PlayerPlugin;
 
