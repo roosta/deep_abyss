@@ -62,11 +62,7 @@ fn inspector_ui(world: &mut World) {
                 Some(value) => {
                     fps = value;
                 }
-                _ => {
-                    warn!(
-                        "Failed to get FPS, something went wrong getting FrameTimeDiagnosticsPlugin::FPS"
-                    )
-                }
+                _ => (),
             }
         }
         None => {
