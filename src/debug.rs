@@ -25,7 +25,18 @@ use crate::player::{
     Direction,
 };
 
-use crate::tilemap::ZIndex;
+use crate::tilemap::{ZIndex, Collider};
+
+fn apply_z_index(
+    z_index: Res<ZIndex>,
+    mut query: Query<&mut Transform, With<Collider>>,
+) {
+    if z_index.is_changed() {
+        for mut transform in &mut query {
+            transform.translation.z = z_index.0
+        }
+    }
+}
 
 fn _update_print(
     query: Query<(&Velocity, &Transform), With<Player>>,
@@ -40,7 +51,9 @@ fn _update_print(
         )
     }
 }
-fn inspector_ui(world: &mut World) {
+fn inspector_ui(
+    world: &mut World,
+) {
     let mut egui_context = world
         .query_filtered::<&mut EguiContext, With<PrimaryWindow>>()
         .single(world)
@@ -51,6 +64,15 @@ fn inspector_ui(world: &mut World) {
             ui_for_world(world, ui);
             ui_for_world_entities_filtered::<With<Player>>(world, ui, false);
 
+            if let Some(mut z_index) = world.get_resource_mut::<ZIndex>() {
+                if ui.button("Toggle collision boxes").clicked() {
+                    if z_index.0 == 0. {
+                        z_index.0 = 50.;
+                    } else if z_index.0 == 50. {
+                        z_index.0 = 0.
+                    }
+                }
+            }
             // ui.heading("State");
             // ui.label("z index");
             // ui_for_resource::<ZIndex>(world, ui);
@@ -70,7 +92,7 @@ impl Plugin for DebugPlugin {
         // if cfg!(debug_assertions) {
         app.add_plugins(EguiPlugin);
         app.add_plugins(bevy_inspector_egui::DefaultInspectorConfigPlugin); // adds default options and `InspectorEguiImpl`s
-        app.add_systems(Update, inspector_ui);
+        app.add_systems(Update, (inspector_ui, apply_z_index));
         app.register_type::<Velocity>();
         app.register_type::<ZIndex>();
         app.register_type::<Direction>();

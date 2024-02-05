@@ -42,7 +42,7 @@ pub struct WallBundle {
 
 pub struct TilemapPlugin;
 
-#[derive(Reflect, Resource, Default)]
+#[derive(Debug, Reflect, Resource, Default)]
 #[reflect(Resource)]
 pub struct ZIndex(pub f32);
 
