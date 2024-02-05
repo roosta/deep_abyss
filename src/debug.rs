@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
+use bevy::diagnostic::DiagnosticsStore;
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
 use bevy_egui::{
     egui::{
         Window,
@@ -62,6 +64,28 @@ fn inspector_ui(
         .single(world)
         .clone();
 
+    let mut fps: f64 = 0.;
+    let diagnostics = world
+        .get_resource::<DiagnosticsStore>();
+
+    // FPS
+    match diagnostics {
+        Some(diag) => {
+            match diag.get(FrameTimeDiagnosticsPlugin::FPS).and_then(|fps| fps.smoothed()) {
+                Some(value) => {
+                    fps = value;
+                },
+                _ => {
+                    warn!(
+                        "Failed to get FPS, something went wrong getting FrameTimeDiagnosticsPlugin::FPS"
+                    )
+                },
+            }
+        },
+        None => {
+            warn!("Unable to get DiagnosticsStore, FPS counter will not work")
+        }
+    }
     Window::new("Deep Abyss: Debug Inspector").show(egui_context.get_mut(), |ui| {
         ScrollArea::vertical().show(ui, |ui| {
             ui_for_world(world, ui);
@@ -76,6 +100,8 @@ fn inspector_ui(
                     }
                 }
             }
+
+            ui.label(format!("FPS: {}", fps.round()));
             // ui.heading("State");
             // ui.label("z index");
             // ui_for_resource::<ZIndex>(world, ui);
@@ -96,6 +122,7 @@ impl Plugin for DebugPlugin {
         // if cfg!(debug_assertions) {
         app.add_plugins(EguiPlugin);
         app.add_plugins(bevy_inspector_egui::DefaultInspectorConfigPlugin); // adds default options and `InspectorEguiImpl`s
+        app.add_plugins(FrameTimeDiagnosticsPlugin::default());
         app.add_systems(Update, (inspector_ui, apply_z_index));
         app.register_type::<Velocity>();
         app.register_type::<ZIndex>();
