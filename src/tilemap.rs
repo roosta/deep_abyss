@@ -1,4 +1,4 @@
-use bevy:: prelude::*;
+use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use rand::Rng;
 use std::collections::{HashMap, HashSet};
@@ -53,7 +53,6 @@ pub struct ZIndex(pub f32);
 //     level_height: i32,
 // }
 
-
 /// Spawns heron collisions for the walls of a level
 ///
 /// You could just insert a ColliderBundle in to the WallBundle,
@@ -86,7 +85,6 @@ fn spawn_collisions(
     // mut player_query: Query<(&mut Velocity, &Transform), With<Player>>,
     // collider_query: Query<(Entity, &Transform, &Wall), With<Collider>>,
 ) {
-
     let mut rng = rand::thread_rng();
 
     // Consider where the walls are
@@ -99,7 +97,6 @@ fn spawn_collisions(
     let mut level_to_wall_locations: HashMap<Entity, HashSet<GridCoords>> = HashMap::new();
 
     wall_query.for_each(|(&grid_coords, parent)| {
-
         if let Ok(grandparent) = parent_query.get(parent.get()) {
             level_to_wall_locations
                 .entry(grandparent.get())
@@ -133,7 +130,8 @@ fn spawn_collisions(
                     let mut row_plates: Vec<Plate> = Vec::new();
                     let mut plate_start = None;
 
-                    // + 1 to the width so the algorithm "terminates" plates that touch the right edge
+                    // + 1 to the width so the algorithm "terminates" plates that touch the right
+                    // edge
                     for x in 0..width + 1 {
                         match (plate_start, level_walls.contains(&GridCoords { x, y })) {
                             (Some(s), false) => {
@@ -191,32 +189,33 @@ fn spawn_collisions(
                         let red: f32 = rng.gen_range(0.0..1.0);
                         let green: f32 = rng.gen_range(0.0..1.0);
                         let blue: f32 = rng.gen_range(0.0..1.0);
-                        let width = (wall_rect.right as f32 - wall_rect.left as f32 + 1.) * grid_size as f32;
-                        let height = (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.) * grid_size as f32;
-                        let center_x = (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32 / 2.;
-                        let center_y = (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32 / 2.;
-                        level.spawn(
-                            ColliderBundle {
-                                sprite_bundle: SpriteBundle {
-                                    sprite: Sprite {
-                                        color: Color::rgb(red, green, blue),
-                                        custom_size: Some(Vec2::new(width, height)),
-                                        ..default()
-                                    },
-                                    transform: Transform::from_xyz(center_x, center_y, z_index.0),
+                        let width = (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
+                            * grid_size as f32;
+                        let height = (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
+                            * grid_size as f32;
+                        let center_x =
+                            (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32 / 2.;
+                        let center_y =
+                            (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32 / 2.;
+                        level.spawn(ColliderBundle {
+                            sprite_bundle: SpriteBundle {
+                                sprite: Sprite {
+                                    color: Color::rgb(red, green, blue),
+                                    custom_size: Some(Vec2::new(width, height)),
                                     ..default()
                                 },
-                                size: ColliderSize(Vec2::new(width, height)),
-                                collider: Collider
+                                transform: Transform::from_xyz(center_x, center_y, z_index.0),
+                                ..default()
                             },
-                        );
+                            size: ColliderSize(Vec2::new(width, height)),
+                            collider: Collider,
+                        });
                     }
                 });
             }
         });
     }
 }
-
 
 impl Plugin for TilemapPlugin {
     fn build(&self, app: &mut App) {

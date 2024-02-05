@@ -1,20 +1,13 @@
+mod debug;
 mod player;
 mod tilemap;
-mod debug;
 
-use bevy:: prelude::*;
+use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use debug::DebugPlugin;
 
-use player::{
-    PlayerBundle,
-    PlayerPlugin,
-};
-use tilemap::{
-    WallBundle,
-    TilemapPlugin,
-    ZIndex,
-};
+use player::{PlayerBundle, PlayerPlugin};
+use tilemap::{TilemapPlugin, WallBundle, ZIndex};
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut camera = Camera2dBundle::default();
@@ -31,11 +24,11 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 fn main() {
     App::new()
         .add_plugins((
-                DefaultPlugins.set(ImagePlugin::default_nearest()),
-                DebugPlugin,
-                TilemapPlugin,
-                PlayerPlugin,
-                ))
+            DefaultPlugins.set(ImagePlugin::default_nearest()),
+            DebugPlugin,
+            TilemapPlugin,
+            PlayerPlugin,
+        ))
         .add_plugins(LdtkPlugin)
         .insert_resource(LevelSelection::index(0))
         .insert_resource(ZIndex(0.))
@@ -45,4 +38,3 @@ fn main() {
         // .init_resource::<LevelWalls>()
         .run();
 }
-

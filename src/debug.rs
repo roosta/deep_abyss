@@ -1,15 +1,14 @@
-use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
 use bevy::diagnostic::DiagnosticsStore;
 use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
+use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 use bevy_egui::{
     egui::{
-        Window,
         ScrollArea,
         // CollapsingHeader
+        Window,
     },
-    EguiContext,
-    EguiPlugin
+    EguiContext, EguiPlugin,
 };
 use bevy_inspector_egui::bevy_inspector::{
     ui_for_world,
@@ -21,19 +20,12 @@ use bevy_inspector_egui::bevy_inspector::{
 // use std::any::TypeId;
 pub struct DebugPlugin;
 
-use crate::player::{
-    Player,
-    Velocity,
-    Direction,
-};
+use crate::player::{Direction, Player, Velocity};
 
-use crate::tilemap::{ZIndex, Collider};
+use crate::tilemap::{Collider, ZIndex};
 
 /// Change z_index of all colliders on z_index change
-fn apply_z_index(
-    z_index: Res<ZIndex>,
-    mut query: Query<&mut Transform, With<Collider>>,
-) {
+fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Collider>>) {
     if z_index.is_changed() {
         for mut transform in &mut query {
             transform.translation.z = z_index.0
@@ -41,47 +33,42 @@ fn apply_z_index(
     }
 }
 
-fn _update_print(
-    query: Query<(&Velocity, &Transform), With<Player>>,
-) {
+fn _update_print(query: Query<(&Velocity, &Transform), With<Player>>) {
     for (velocity, transform) in &query {
         println!(
             "Velocity: [{:#?}, {:#?}], [{:#?}, {:#?}]",
-            velocity.x,
-            velocity.y,
-            transform.translation.x,
-            transform.translation.y
+            velocity.x, velocity.y, transform.translation.x, transform.translation.y
         )
     }
 }
 
 /// API: https://github.com/emilk/egui
-fn inspector_ui(
-    world: &mut World,
-) {
+fn inspector_ui(world: &mut World) {
     let mut egui_context = world
         .query_filtered::<&mut EguiContext, With<PrimaryWindow>>()
         .single(world)
         .clone();
 
     let mut fps: f64 = 0.;
-    let diagnostics = world
-        .get_resource::<DiagnosticsStore>();
+    let diagnostics = world.get_resource::<DiagnosticsStore>();
 
     // FPS
     match diagnostics {
         Some(diag) => {
-            match diag.get(FrameTimeDiagnosticsPlugin::FPS).and_then(|fps| fps.smoothed()) {
+            match diag
+                .get(FrameTimeDiagnosticsPlugin::FPS)
+                .and_then(|fps| fps.smoothed())
+            {
                 Some(value) => {
                     fps = value;
-                },
+                }
                 _ => {
                     warn!(
                         "Failed to get FPS, something went wrong getting FrameTimeDiagnosticsPlugin::FPS"
                     )
-                },
+                }
             }
-        },
+        }
         None => {
             warn!("Unable to get DiagnosticsStore, FPS counter will not work")
         }
@@ -130,4 +117,3 @@ impl Plugin for DebugPlugin {
     }
     // }
 }
-
