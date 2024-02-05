@@ -27,6 +27,7 @@ use crate::player::{
 
 use crate::tilemap::{ZIndex, Collider};
 
+/// Change z_index of all colliders on z_index change
 fn apply_z_index(
     z_index: Res<ZIndex>,
     mut query: Query<&mut Transform, With<Collider>>,
@@ -51,6 +52,8 @@ fn _update_print(
         )
     }
 }
+
+/// API: https://github.com/emilk/egui
 fn inspector_ui(
     world: &mut World,
 ) {
@@ -87,6 +90,7 @@ fn inspector_ui(
     });
 }
 
+// TODO: Only start on dev
 impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
         // if cfg!(debug_assertions) {
