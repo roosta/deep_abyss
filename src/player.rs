@@ -10,6 +10,8 @@ const PLAYER_SIZE: Vec2 = Vec2::new(GRID_SIZE, GRID_SIZE);
 const ACCELERATION: f32 = 200.;
 const MAX_MOVE_SPEED: f32 = 100.;
 const DRAG_FACTOR: f32 = 0.50;
+const GRAV_ACCELERATON: f32 = 35.0;
+const MAX_FALL_SPEED: f32 = 200.0;
 
 #[derive(Default, Component, Reflect)]
 pub struct Player;
@@ -39,11 +41,10 @@ pub struct PlayerPlugin;
 fn update_velocity(mut query: Query<(&mut Velocity, &Direction), With<Player>>, time: Res<Time>) {
     for (mut velocity, direction) in &mut query {
         velocity.x = velocity.x.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
-        velocity.y = velocity.y.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
+        velocity.y = velocity.y.clamp(0., MAX_FALL_SPEED);
         velocity.x += direction.x * ACCELERATION * time.delta_seconds();
-        velocity.y += direction.y * ACCELERATION * time.delta_seconds();
+        velocity.y -= GRAV_ACCELERATON * time.delta_seconds();
         velocity.x *= DRAG_FACTOR;
-        velocity.y *= DRAG_FACTOR;
     }
 }
 
@@ -167,12 +168,12 @@ fn handle_input(keys: Res<Input<KeyCode>>, mut query: Query<&mut Direction, With
         if keys.pressed(KeyCode::Right) || keys.pressed(KeyCode::D) {
             direction.x = 1.;
         }
-        if keys.pressed(KeyCode::Up) || keys.pressed(KeyCode::W) {
-            direction.y = 1.;
-        }
-        if keys.pressed(KeyCode::Down) || keys.pressed(KeyCode::S) {
-            direction.y = -1.;
-        }
+        // if keys.pressed(KeyCode::Up) || keys.pressed(KeyCode::W) {
+        //     direction.y = 1.;
+        // }
+        // if keys.pressed(KeyCode::Down) || keys.pressed(KeyCode::S) {
+        //     direction.y = -1.;
+        // }
     }
 }
 
