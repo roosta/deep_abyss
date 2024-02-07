@@ -7,11 +7,12 @@ use crate::tilemap::{Collider, ColliderSize};
 
 const GRID_SIZE: f32 = 16.;
 const PLAYER_SIZE: Vec2 = Vec2::new(GRID_SIZE, GRID_SIZE);
-const ACCELERATION: f32 = 200.;
-const MAX_MOVE_SPEED: f32 = 100.;
-const DRAG_FACTOR: f32 = 0.50;
-const GRAV_ACCELERATON: f32 = 35.0;
-const MAX_FALL_SPEED: f32 = 200.0;
+const MOVE_ACCELERATION: f32 = 100.;
+const MAX_MOVE_SPEED: f32 = 200.;
+const DRAG_FACTOR: f32 = 0.90;
+const ACCELERATION_FACTOR: f32 = 1.1;
+const GRAVITY_ACCELERATON: f32 = 35.0;
+const MAX_FALL_SPEED: f32 = 80.0;
 
 #[derive(Default, Component, Reflect)]
 pub struct Player;
@@ -41,10 +42,12 @@ pub struct PlayerPlugin;
 fn update_velocity(mut query: Query<(&mut Velocity, &Direction), With<Player>>, time: Res<Time>) {
     for (mut velocity, direction) in &mut query {
         velocity.x = velocity.x.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
-        velocity.y = velocity.y.clamp(0., MAX_FALL_SPEED);
-        velocity.x += direction.x * ACCELERATION * time.delta_seconds();
-        velocity.y -= GRAV_ACCELERATON * time.delta_seconds();
-        velocity.x *= DRAG_FACTOR;
+        velocity.y = velocity.y.clamp(-MAX_FALL_SPEED, MAX_FALL_SPEED);
+        velocity.x += direction.x * MOVE_ACCELERATION * ACCELERATION_FACTOR * time.delta_seconds();
+        velocity.y -= GRAVITY_ACCELERATON * time.delta_seconds();
+        if direction.x == 0. {
+            velocity.x *= DRAG_FACTOR;
+        }
     }
 }
 
@@ -105,12 +108,14 @@ fn handle_collisions(
 fn move_player(
     mut query: Query<(&mut Velocity, &mut Transform), With<Player>>,
     collider_query: Query<(&Transform, &ColliderSize), (With<Collider>, Without<Player>)>,
+    time: Res<Time>
+
 ) {
     for (mut velocity, mut transform) in &mut query {
         let prev = transform.translation.clone();
 
-        let half_x = velocity.x / 2.;
-        let half_y = velocity.y / 2.;
+        let half_x = velocity.x * 0.5 * time.delta_seconds();
+        let half_y = velocity.y * 0.5 * time.delta_seconds();
 
         // Horizontal collisions
         if velocity.x > 0. || velocity.x < 0. {
