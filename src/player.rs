@@ -48,11 +48,7 @@ fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &OnGround), With
         velocity.x = velocity.x.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
         velocity.y = velocity.y.clamp(-MAX_FALL_SPEED, MAX_FALL_SPEED);
         velocity.x += direction.x * MOVE_ACCELERATION * ACCELERATION_FACTOR * time.delta_seconds();
-        if on_ground.0 {
-            velocity.y = 0.;
-        } else {
-            velocity.y -= GRAVITY_ACCELERATON * time.delta_seconds();
-        }
+        velocity.y -= GRAVITY_ACCELERATON * time.delta_seconds();
         if direction.x == 0. {
             velocity.x *= DRAG_FACTOR;
         }
@@ -91,6 +87,7 @@ fn handle_collisions(
     on_ground: &mut OnGround,
     axis: CollisionAxis,
 ) {
+    on_ground.0 = false;
     for rect in intersect_rects(&collider_query, transform.translation) {
         let size = rect.size();
         match axis {
@@ -108,7 +105,7 @@ fn handle_collisions(
                 } else if velocity.y > 0. {
                     transform.translation.y -= size.y;
                 }
-                if pre.y - (PLAYER_SIZE.y / 2.) <= rect.min.y {
+                if pre.y - (PLAYER_SIZE.y / 2.) <= rect.max.y {
                     on_ground.0 = true;
                 }
             }
@@ -131,7 +128,7 @@ fn move_player(
         let half_y = velocity.y * 0.5 * time.delta_seconds();
 
         // Reset ground check
-        on_ground.0 = false;
+        // on_ground.0 = false;
 
         // Horizontal collisions
         if velocity.x > 0. || velocity.x < 0. {
