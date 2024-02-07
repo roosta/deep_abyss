@@ -43,12 +43,16 @@ pub struct Direction(Vec2);
 
 pub struct PlayerPlugin;
 
-fn update_velocity(mut query: Query<(&mut Velocity, &Direction), With<Player>>, time: Res<Time>) {
-    for (mut velocity, direction) in &mut query {
+fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &OnGround), With<Player>>, time: Res<Time>) {
+    for (mut velocity, direction, on_ground) in &mut query {
         velocity.x = velocity.x.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
         velocity.y = velocity.y.clamp(-MAX_FALL_SPEED, MAX_FALL_SPEED);
         velocity.x += direction.x * MOVE_ACCELERATION * ACCELERATION_FACTOR * time.delta_seconds();
-        velocity.y -= GRAVITY_ACCELERATON * time.delta_seconds();
+        if on_ground.0 {
+            velocity.y = 0.;
+        } else {
+            velocity.y -= GRAVITY_ACCELERATON * time.delta_seconds();
+        }
         if direction.x == 0. {
             velocity.x *= DRAG_FACTOR;
         }
