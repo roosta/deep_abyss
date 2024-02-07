@@ -20,7 +20,7 @@ use bevy_inspector_egui::bevy_inspector::{
 // use std::any::TypeId;
 pub struct DebugPlugin;
 
-use crate::player::{Direction, Player, Velocity};
+use crate::player::{Direction, Player, Velocity, OnGround};
 
 use crate::tilemap::{Collider, ZIndex};
 
@@ -110,6 +110,7 @@ impl Plugin for DebugPlugin {
         app.register_type::<Velocity>();
         app.register_type::<ZIndex>();
         app.register_type::<Direction>();
+        app.register_type::<OnGround>();
     }
     // }
 }

@@ -17,9 +17,13 @@ const MAX_FALL_SPEED: f32 = 80.0;
 #[derive(Default, Component, Reflect)]
 pub struct Player;
 
+#[derive(Default, Component, Reflect)]
+pub struct OnGround(bool);
+
 #[derive(Default, Bundle, LdtkEntity)]
 pub struct PlayerBundle {
     player: Player,
+    on_ground: OnGround,
     velocity: Velocity,
     direction: Direction,
     #[sprite_sheet_bundle]
@@ -80,6 +84,7 @@ fn handle_collisions(
     collider_query: &Query<(&Transform, &ColliderSize), (With<Collider>, Without<Player>)>,
     velocity: &Velocity,
     transform: &mut Transform,
+    on_ground: &mut OnGround,
     axis: CollisionAxis,
 ) {
     for rect in intersect_rects(&collider_query, transform.translation) {
@@ -93,10 +98,14 @@ fn handle_collisions(
                 }
             }
             CollisionAxis::Y => {
+                let pre = transform.translation.clone();
                 if velocity.y < 0. {
                     transform.translation.y += size.y;
                 } else if velocity.y > 0. {
                     transform.translation.y -= size.y;
+                }
+                if pre.y - (PLAYER_SIZE.y / 2.) <= rect.min.y {
+                    on_ground.0 = true;
                 }
             }
         }
@@ -106,16 +115,19 @@ fn handle_collisions(
 /// Move player by mutating transform, and check collisions, push player out by the size of the
 /// intersect rectangle when collision is detect
 fn move_player(
-    mut query: Query<(&mut Velocity, &mut Transform), With<Player>>,
+    mut query: Query<(&mut Velocity, &mut Transform, &mut OnGround), With<Player>>,
     collider_query: Query<(&Transform, &ColliderSize), (With<Collider>, Without<Player>)>,
     time: Res<Time>
 
 ) {
-    for (mut velocity, mut transform) in &mut query {
+    for (mut velocity, mut transform, mut on_ground) in &mut query {
         let prev = transform.translation.clone();
 
         let half_x = velocity.x * 0.5 * time.delta_seconds();
         let half_y = velocity.y * 0.5 * time.delta_seconds();
+
+        // Reset ground check
+        on_ground.0 = false;
 
         // Horizontal collisions
         if velocity.x > 0. || velocity.x < 0. {
@@ -124,6 +136,7 @@ fn move_player(
                 &collider_query,
                 &mut velocity,
                 &mut transform,
+                &mut on_ground,
                 CollisionAxis::X,
             );
             transform.translation.x += half_x;
@@ -131,6 +144,7 @@ fn move_player(
                 &collider_query,
                 &mut velocity,
                 &mut transform,
+                &mut on_ground,
                 CollisionAxis::X,
             );
         }
@@ -142,6 +156,7 @@ fn move_player(
                 &collider_query,
                 &mut velocity,
                 &mut transform,
+                &mut on_ground,
                 CollisionAxis::Y,
             );
             transform.translation.y += half_y;
@@ -149,6 +164,7 @@ fn move_player(
                 &collider_query,
                 &mut velocity,
                 &mut transform,
+                &mut on_ground,
                 CollisionAxis::Y,
             );
         }
