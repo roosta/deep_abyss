@@ -28,11 +28,11 @@ const FLOATING: Physics = Physics {
 };
 
 // On solid ground
-const _GROUNDED: Physics = Physics {
-    acceleration: 80.,
+const GROUNDED: Physics = Physics {
+    acceleration: 200.,
     move_speed: 200.,
     fall_speed: 80.,
-    drag: 0.90,
+    drag: 0.50,
     gravity: 35.,
 };
 
@@ -73,8 +73,8 @@ pub struct Direction(Vec2);
 
 pub struct PlayerPlugin;
 
-fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &OnGround, &Physics), With<Player>>, time: Res<Time>) {
-    for (mut velocity, direction, on_ground, physics) in &mut query {
+fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &Physics), With<Player>>, time: Res<Time>) {
+    for (mut velocity, direction, physics) in &mut query {
         let Physics { acceleration, move_speed, fall_speed, drag, gravity } = *physics;
         velocity.x = velocity.x.clamp(-move_speed, move_speed);
         velocity.y = velocity.y.clamp(-fall_speed, fall_speed);
@@ -82,6 +82,20 @@ fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &OnGround, &Phys
         velocity.y -= gravity * time.delta_seconds();
         if direction.x == 0. {
             velocity.x *= drag;
+        }
+    }
+}
+
+/// Swap out physics component based on OnGround component state
+fn check_physics(
+    mut commands: Commands,
+    mut query: Query<(Entity, &OnGround), With<Player>>,
+) {
+    for (entity, on_ground) in query.iter_mut() {
+        if on_ground.0 {
+            commands.entity(entity).insert(GROUNDED);
+        } else {
+            commands.entity(entity).insert(FLOATING);
         }
     }
 }
@@ -232,6 +246,14 @@ fn handle_input(keys: Res<Input<KeyCode>>, mut query: Query<&mut Direction, With
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (handle_input, update_velocity, move_player).chain());
+        app.add_systems(
+            Update,
+            (
+                handle_input,
+                update_velocity,
+                move_player,
+                check_physics
+            ).chain()
+        );
     }
 }
