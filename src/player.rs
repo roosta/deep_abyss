@@ -201,6 +201,6 @@ fn handle_input(keys: Res<Input<KeyCode>>, mut query: Query<&mut Direction, With
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (handle_input, update_velocity, move_player));
+        app.add_systems(Update, (handle_input, update_velocity, move_player).chain());
     }
 }
