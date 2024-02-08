@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.6.0](https://github.com/roosta/deep_abyss/compare/0.5.0..0.6.0) - 2024-02-08
+#### Bug Fixes
+- **(dev)** disable missing value warning - ([9f0c1b1](https://github.com/roosta/deep_abyss/commit/9f0c1b16cb673269da68e45d2f18f36d9730da2b)) - [@roosta](https://github.com/roosta)
+- chain player updates - ([a738d16](https://github.com/roosta/deep_abyss/commit/a738d161b81a2cfd82f94b53975cab21993f2342)) - [@roosta](https://github.com/roosta)
+- on ground toggle - ([1f0dd48](https://github.com/roosta/deep_abyss/commit/1f0dd4814e41fb68a2fd95c5b0f7d33754ac65c4)) - [@roosta](https://github.com/roosta)
+- set velocity.y to 0 when on ground - ([2f28615](https://github.com/roosta/deep_abyss/commit/2f28615a0b89570ce7602e7d14dced200e538125)) - [@roosta](https://github.com/roosta)
+#### Documentation
+- update debug docstrings - ([23ed1c3](https://github.com/roosta/deep_abyss/commit/23ed1c389bb5bdef9f7709b84e7fc8450bba5500)) - [@roosta](https://github.com/roosta)
+#### Features
+- **(dev)** add FPS counter - ([8d2bdee](https://github.com/roosta/deep_abyss/commit/8d2bdeecbc66a2bac4594e46754d2f386a465cb7)) - [@roosta](https://github.com/roosta)
+- **(dev)** enable toggling collision rects - ([174cf6f](https://github.com/roosta/deep_abyss/commit/174cf6fb5ddecd86af1ef5b088cc511e2090cd31)) - [@roosta](https://github.com/roosta)
+- **(lvl)** move player start - ([17a1662](https://github.com/roosta/deep_abyss/commit/17a16628755eb0f99be03b03348e79e44a03371e)) - [@roosta](https://github.com/roosta)
+- swap physics values based on ground state - ([8d7b799](https://github.com/roosta/deep_abyss/commit/8d7b799a2d9f3aad537ea1502f5a0ef9e6e8eb9e)) - [@roosta](https://github.com/roosta)
+- add player ground check - ([6afcc75](https://github.com/roosta/deep_abyss/commit/6afcc7563df24e13f99f057f17a7054f18d6362b)) - [@roosta](https://github.com/roosta)
+- apply drag + adjust movement consts - ([d9c66e4](https://github.com/roosta/deep_abyss/commit/d9c66e44437608c7a1deed7163d399ceb456c6bc)) - [@roosta](https://github.com/roosta)
+- add gravity - ([3dbd0ed](https://github.com/roosta/deep_abyss/commit/3dbd0edf6b908e4d2d4852e740199fd2c7e7cf0e)) - [@roosta](https://github.com/roosta)
+#### Miscellaneous Chores
+- **(fmt)** rust format on src files - ([36b20b4](https://github.com/roosta/deep_abyss/commit/36b20b445b860d6f65f423eca76b544f448f69f7)) - [@roosta](https://github.com/roosta)
+#### Refactoring
+- move consts to structs - ([58038a2](https://github.com/roosta/deep_abyss/commit/58038a217aeb05757c33e41ef41ccdf28d67661a)) - [@roosta](https://github.com/roosta)
+
+- - -
+
 ## [0.5.0](https://github.com/roosta/deep_abyss/compare/0.4.0..0.5.0) - 2024-02-04
 #### Documentation
 - update spawn_collisions docstring - ([29bd72f](https://github.com/roosta/deep_abyss/commit/29bd72fb6056ceb5a806f3f78fdaf6f9af5f9cd2)) - [@roosta](https://github.com/roosta)
