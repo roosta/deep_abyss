@@ -5,14 +5,36 @@ use bevy_ecs_ldtk::prelude::*;
 
 use crate::tilemap::{Collider, ColliderSize};
 
-const GRID_SIZE: f32 = 16.;
-const PLAYER_SIZE: Vec2 = Vec2::new(GRID_SIZE, GRID_SIZE);
-const MOVE_ACCELERATION: f32 = 100.;
-const MAX_MOVE_SPEED: f32 = 200.;
-const DRAG_FACTOR: f32 = 0.90;
-const ACCELERATION_FACTOR: f32 = 1.1;
-const GRAVITY_ACCELERATON: f32 = 35.0;
-const MAX_FALL_SPEED: f32 = 80.0;
+// const GRID_SIZE: f32 = 16.;
+const PLAYER_SIZE: Vec2 = Vec2::new(16., 16.);
+
+/// Struct containing values controlling movement, such as gravity and acceleration
+#[derive(Default, Component, Reflect, Debug)]
+pub struct Physics {
+    acceleration: f32,
+    move_speed: f32,
+    fall_speed: f32,
+    drag: f32,
+    gravity: f32,
+}
+
+// Floating in water values
+const FLOATING: Physics = Physics {
+    acceleration: 80.,
+    move_speed: 200.,
+    fall_speed: 80.,
+    drag: 0.90,
+    gravity: 35.,
+};
+
+// On solid ground
+const _GROUNDED: Physics = Physics {
+    acceleration: 80.,
+    move_speed: 200.,
+    fall_speed: 80.,
+    drag: 0.90,
+    gravity: 35.,
+};
 
 #[derive(Default, Component, Reflect)]
 pub struct Player;
@@ -24,10 +46,18 @@ pub struct OnGround(bool);
 pub struct PlayerBundle {
     player: Player,
     on_ground: OnGround,
+    #[with(init_physics)]
+    physics: Physics,
     velocity: Velocity,
     direction: Direction,
     #[sprite_sheet_bundle]
     sprite_bundle: SpriteSheetBundle,
+}
+
+/// Initialize physics values
+/// TODO: More will be added here, depending on level design
+fn init_physics(_: &EntityInstance) -> Physics {
+    FLOATING
 }
 
 enum CollisionAxis {
@@ -43,14 +73,15 @@ pub struct Direction(Vec2);
 
 pub struct PlayerPlugin;
 
-fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &OnGround), With<Player>>, time: Res<Time>) {
-    for (mut velocity, direction, on_ground) in &mut query {
-        velocity.x = velocity.x.clamp(-MAX_MOVE_SPEED, MAX_MOVE_SPEED);
-        velocity.y = velocity.y.clamp(-MAX_FALL_SPEED, MAX_FALL_SPEED);
-        velocity.x += direction.x * MOVE_ACCELERATION * ACCELERATION_FACTOR * time.delta_seconds();
-        velocity.y -= GRAVITY_ACCELERATON * time.delta_seconds();
+fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &OnGround, &Physics), With<Player>>, time: Res<Time>) {
+    for (mut velocity, direction, on_ground, physics) in &mut query {
+        let Physics { acceleration, move_speed, fall_speed, drag, gravity } = *physics;
+        velocity.x = velocity.x.clamp(-move_speed, move_speed);
+        velocity.y = velocity.y.clamp(-fall_speed, fall_speed);
+        velocity.x += direction.x * acceleration * time.delta_seconds();
+        velocity.y -= gravity * time.delta_seconds();
         if direction.x == 0. {
-            velocity.x *= DRAG_FACTOR;
+            velocity.x *= drag;
         }
     }
 }
