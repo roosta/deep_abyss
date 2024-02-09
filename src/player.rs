@@ -73,26 +73,35 @@ pub struct Direction(Vec2);
 
 pub struct PlayerPlugin;
 
-fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &Physics), With<Player>>, time: Res<Time>) {
+fn update_velocity(
+    mut query: Query<(&mut Velocity, &Direction, &Physics), With<Player>>,
+    time: Res<Time>,
+) {
     for (mut velocity, direction, physics) in &mut query {
-        let Physics { acceleration, move_speed, fall_speed, drag, gravity } = *physics;
-        let slowdown = if direction.y > 0. { 0.9 } else if direction.y < 0. { 1.1 } else { 1. };
-        velocity.y = (
-            velocity.y - gravity * time.delta_seconds()
-        ).clamp(-fall_speed, fall_speed);
-        velocity.x = (
-            velocity.x + direction.x * acceleration * time.delta_seconds()
-        ).clamp(-move_speed, move_speed);
+        let Physics {
+            acceleration,
+            move_speed,
+            fall_speed,
+            drag,
+            gravity,
+        } = *physics;
+        let slowdown = if direction.y > 0. {
+            0.9
+        } else if direction.y < 0. {
+            1.1
+        } else {
+            1.
+        };
+        velocity.y = (velocity.y - gravity * time.delta_seconds()).clamp(-fall_speed, fall_speed);
+        velocity.x = (velocity.x + direction.x * acceleration * time.delta_seconds())
+            .clamp(-move_speed, move_speed);
         velocity.x *= drag;
         velocity.y *= slowdown;
     }
 }
 
 /// Swap out physics component based on OnGround component state
-fn check_physics(
-    mut commands: Commands,
-    mut query: Query<(Entity, &OnGround), With<Player>>,
-) {
+fn check_physics(mut commands: Commands, mut query: Query<(Entity, &OnGround), With<Player>>) {
     for (entity, on_ground) in query.iter_mut() {
         if on_ground.0 {
             commands.entity(entity).insert(GROUNDED);
@@ -165,8 +174,7 @@ fn handle_collisions(
 fn move_player(
     mut query: Query<(&mut Velocity, &mut Transform, &mut OnGround), With<Player>>,
     collider_query: Query<(&Transform, &ColliderSize), (With<Collider>, Without<Player>)>,
-    time: Res<Time>
-
+    time: Res<Time>,
 ) {
     for (mut velocity, mut transform, mut on_ground) in &mut query {
         let prev = transform.translation.clone();
@@ -250,12 +258,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (
-                handle_input,
-                update_velocity,
-                move_player,
-                check_physics
-            ).chain()
+            (handle_input, update_velocity, move_player, check_physics).chain(),
         );
     }
 }
