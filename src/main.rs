@@ -13,7 +13,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut camera = Camera2dBundle::default();
     camera.projection.scale = 0.5;
     camera.transform.translation.x += 200.;
-    camera.transform.translation.y += 150.;
+    camera.transform.translation.y += 288.;
     commands.spawn(camera);
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: asset_server.load("deep_abyss.ldtk"),
