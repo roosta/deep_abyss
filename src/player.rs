@@ -20,16 +20,16 @@ pub struct Physics {
 
 // Floating in water values
 const FLOATING: Physics = Physics {
-    acceleration: 80.,
-    move_speed: 200.,
+    acceleration: 1000.,
+    move_speed: 100.,
     fall_speed: 80.,
-    drag: 0.90,
+    drag: 0.80,
     gravity: 35.,
 };
 
 // On solid ground
 const GROUNDED: Physics = Physics {
-    acceleration: 200.,
+    acceleration: 5000.,
     move_speed: 200.,
     fall_speed: 80.,
     drag: 0.50,
@@ -76,13 +76,13 @@ pub struct PlayerPlugin;
 fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &Physics), With<Player>>, time: Res<Time>) {
     for (mut velocity, direction, physics) in &mut query {
         let Physics { acceleration, move_speed, fall_speed, drag, gravity } = *physics;
-        velocity.x = velocity.x.clamp(-move_speed, move_speed);
-        velocity.y = velocity.y.clamp(-fall_speed, fall_speed);
-        velocity.x += direction.x * acceleration * time.delta_seconds();
-        velocity.y -= gravity * time.delta_seconds();
-        if direction.x == 0. {
-            velocity.x *= drag;
-        }
+        velocity.y = (
+            velocity.y - gravity * time.delta_seconds()
+        ).clamp(-fall_speed, fall_speed);
+        velocity.x = (
+            velocity.x + direction.x * acceleration * time.delta_seconds()
+        ).clamp(-move_speed, move_speed);
+        velocity.x *= drag;
     }
 }
 
