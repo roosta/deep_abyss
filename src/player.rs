@@ -76,6 +76,7 @@ pub struct PlayerPlugin;
 fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &Physics), With<Player>>, time: Res<Time>) {
     for (mut velocity, direction, physics) in &mut query {
         let Physics { acceleration, move_speed, fall_speed, drag, gravity } = *physics;
+        let slowdown = if direction.y > 0. { 0.9 } else if direction.y < 0. { 1.1 } else { 1. };
         velocity.y = (
             velocity.y - gravity * time.delta_seconds()
         ).clamp(-fall_speed, fall_speed);
@@ -83,6 +84,7 @@ fn update_velocity(mut query: Query<(&mut Velocity, &Direction, &Physics), With<
             velocity.x + direction.x * acceleration * time.delta_seconds()
         ).clamp(-move_speed, move_speed);
         velocity.x *= drag;
+        velocity.y *= slowdown;
     }
 }
 
@@ -235,12 +237,12 @@ fn handle_input(keys: Res<Input<KeyCode>>, mut query: Query<&mut Direction, With
         if keys.pressed(KeyCode::Right) || keys.pressed(KeyCode::D) {
             direction.x = 1.;
         }
-        // if keys.pressed(KeyCode::Up) || keys.pressed(KeyCode::W) {
-        //     direction.y = 1.;
-        // }
-        // if keys.pressed(KeyCode::Down) || keys.pressed(KeyCode::S) {
-        //     direction.y = -1.;
-        // }
+        if keys.pressed(KeyCode::Up) || keys.pressed(KeyCode::W) {
+            direction.y = 1.;
+        }
+        if keys.pressed(KeyCode::Down) || keys.pressed(KeyCode::S) {
+            direction.y = -1.;
+        }
     }
 }
 
