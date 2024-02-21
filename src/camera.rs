@@ -5,9 +5,16 @@ use bevy::render::camera::{
     Viewport,
 };
 
-#[derive(Component)]
+#[derive(Component, Default)]
 struct GameViewport;
 
+
+
+#[derive(Default, Bundle)]
+pub struct CameraBundle {
+    marker: GameViewport,
+    camera_bundle: Camera2dBundle,
+}
 pub struct CameraPlugin;
 
 const ASPECT_RATIO: f32 = 16. / 9.;
@@ -23,7 +30,10 @@ fn setup(mut commands: Commands) {
         max_width: MAX_WIDTH,
         max_height: MAX_HEIGHT
     };
-    commands.spawn((camera_game, GameViewport));
+    commands.spawn(CameraBundle {
+        camera_bundle: camera_game,
+        ..default()
+    });
 }
 
 fn follow_player(
