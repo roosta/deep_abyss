@@ -11,14 +11,17 @@ struct GameViewport;
 pub struct CameraPlugin;
 
 const ASPECT_RATIO: f32 = 16. / 9.;
+const MAX_WIDTH: f32 = 384.0;
+const LEVEL_WIDTH: f32 = 768.0;
+const MAX_HEIGHT: f32 = 432.0;
 
 use crate::player::Player;
 
 fn setup(mut commands: Commands) {
     let mut camera_game = Camera2dBundle::default();
     camera_game.projection.scaling_mode = ScalingMode::AutoMax {
-        max_width: 384.0,
-        max_height: 432.0
+        max_width: MAX_WIDTH,
+        max_height: MAX_HEIGHT
     };
     commands.spawn((camera_game, GameViewport));
 }
