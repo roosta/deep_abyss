@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use bevy::render::camrra::{OrthographicProjection, ScalingMode, Viewport};
+use bevy::render::camera::{OrthographicProjection, ScalingMode, Viewport};
 
 #[derive(Component, Default)]
 struct GameViewport;
