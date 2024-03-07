@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.7.1](https://github.com/roosta/deep_abyss/compare/0.7.0..0.7.1) - 2024-03-07
+#### Bug Fixes
+- fix typo - ([253f774](https://github.com/roosta/deep_abyss/commit/253f774cdd7eaa078feae0a72b3628a55d0d91a1)) - [@roosta](https://github.com/roosta)
+
+- - -
+
 ## [0.7.0](https://github.com/roosta/deep_abyss/compare/0.6.0..0.7.0) - 2024-03-07
 #### Bug Fixes
 - clamp aspect ratio - ([0393b3a](https://github.com/roosta/deep_abyss/commit/0393b3a9bc059271a86204aa2be268d91986e0c4)) - [@roosta](https://github.com/roosta)
