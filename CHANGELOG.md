@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.7.0](https://github.com/roosta/deep_abyss/compare/0.6.0..0.7.0) - 2024-03-07
+#### Bug Fixes
+- clamp aspect ratio - ([0393b3a](https://github.com/roosta/deep_abyss/commit/0393b3a9bc059271a86204aa2be268d91986e0c4)) - [@roosta](https://github.com/roosta)
+- reposition camera - ([7472b8c](https://github.com/roosta/deep_abyss/commit/7472b8c2aabf2b2f6ad8d07f2b0e0e5f6b1992ed)) - [@roosta](https://github.com/roosta)
+- apply drag always - ([aa14230](https://github.com/roosta/deep_abyss/commit/aa142300e090180cff7a15711266a6c37eb7a253)) - [@roosta](https://github.com/roosta)
+#### Features
+- **(lvl)** increase width - ([73bf0bf](https://github.com/roosta/deep_abyss/commit/73bf0bf1f3c4d7d85ad477c521dda6e3ff726d0b)) - [@roosta](https://github.com/roosta)
+- **(lvl)** increase height, more tiles - ([db23a60](https://github.com/roosta/deep_abyss/commit/db23a60811a133117a25baef0cdda70c1c47a2e5)) - [@roosta](https://github.com/roosta)
+- clamp camera to level edges - ([59b43ef](https://github.com/roosta/deep_abyss/commit/59b43eff9ce1a7bf3ae2ec1663087cff18aed2cb)) - [@roosta](https://github.com/roosta)
+- center camera on player - ([0d2d80f](https://github.com/roosta/deep_abyss/commit/0d2d80f583725f589c9ace3d9ccfe784eba420e1)) - [@roosta](https://github.com/roosta)
+- enable slowdown and speedup - ([2b62408](https://github.com/roosta/deep_abyss/commit/2b62408c0a3ae075cd0efbe3ae2ad8aa2804fbc5)) - [@roosta](https://github.com/roosta)
+#### Miscellaneous Chores
+- **(fmt)** format camera.rs - ([35f6a2b](https://github.com/roosta/deep_abyss/commit/35f6a2bef2043fcef59741e4258a702d3e02f58a)) - [@roosta](https://github.com/roosta)
+- **(fmt)** format player.rs - ([e2c54c4](https://github.com/roosta/deep_abyss/commit/e2c54c468222d6261d2fe8380aff9ffe2aa3e756)) - [@roosta](https://github.com/roosta)
+#### Refactoring
+- setup camera bundle - ([dee1179](https://github.com/roosta/deep_abyss/commit/dee1179b72dce8210c8c4a46d500e2acec08c075)) - [@roosta](https://github.com/roosta)
+- define dimension consts - ([79138c0](https://github.com/roosta/deep_abyss/commit/79138c047c5d899681ca69437e196d5ccb0dd830)) - [@roosta](https://github.com/roosta)
+- move player related camera its own fn - ([0cb68e9](https://github.com/roosta/deep_abyss/commit/0cb68e9bcd67b92557a33a61e7a03a600d3b34c9)) - [@roosta](https://github.com/roosta)
+- move camera to plugin - ([202d485](https://github.com/roosta/deep_abyss/commit/202d485bbde28b2d1771895ba9de8bfc90195ee7)) - [@roosta](https://github.com/roosta)
+
+- - -
+
 ## [0.6.0](https://github.com/roosta/deep_abyss/compare/0.5.0..0.6.0) - 2024-02-08
 #### Bug Fixes
 - **(dev)** disable missing value warning - ([9f0c1b1](https://github.com/roosta/deep_abyss/commit/9f0c1b16cb673269da68e45d2f18f36d9730da2b)) - [@roosta](https://github.com/roosta)
