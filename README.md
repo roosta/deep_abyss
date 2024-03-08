@@ -30,7 +30,7 @@ This will be improved later, but the releases are packaged with the assets.
 
 ## LDtk
 
-The levels used in this game is created in [LDtk](https://ldtk.io/), version `1.4.1`
+The levels used in this game is created in [LDtk](https://ldtk.io/), version `1.5.3`
 
 ## Placeholder assets
 
