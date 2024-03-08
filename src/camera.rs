@@ -47,6 +47,8 @@ fn follow_player(
     }
 }
 
+/// Clamp camera to level, ensure that camera stays within the level, and not over extending beyond
+/// level bounds
 fn clamp_level(
     level_query: Query<(&Transform, &LevelIid), (Without<GameViewport>, Without<Player>)>,
     ldtk_projects: Query<&Handle<LdtkProject>>,
