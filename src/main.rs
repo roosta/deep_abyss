@@ -2,6 +2,7 @@ mod debug;
 mod player;
 mod tilemap;
 mod camera;
+mod physics;
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -10,6 +11,7 @@ use camera::CameraPlugin;
 
 use player::{PlayerBundle, PlayerPlugin};
 use tilemap::{TilemapPlugin, WallBundle, ZIndex};
+use physics::PhysicsPlugin;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(LdtkWorldBundle {
@@ -23,11 +25,12 @@ fn main() {
         .add_plugins((
             DefaultPlugins.set(ImagePlugin::default_nearest()),
             DebugPlugin,
+            PhysicsPlugin,
             TilemapPlugin,
             PlayerPlugin,
-            CameraPlugin
+            CameraPlugin,
+            LdtkPlugin
         ))
-        .add_plugins(LdtkPlugin)
         .insert_resource(LevelSelection::index(0))
         .insert_resource(ZIndex(0.))
         .add_systems(Startup, setup)
