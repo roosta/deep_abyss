@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.8.0](https://github.com/roosta/deep_abyss/compare/0.7.1..0.8.0) - 2024-03-14
+#### Bug Fixes
+- fix debug query panic on exit - ([498bb9c](https://github.com/roosta/deep_abyss/commit/498bb9c2820d9fe31e31acb82332f4122f961c9d)) - [@roosta](https://github.com/roosta)
+- fix issue with z_index query - ([0054bbb](https://github.com/roosta/deep_abyss/commit/0054bbb288b753b3f4243b063f66a68b1e89b20b)) - [@roosta](https://github.com/roosta)
+- rename wall to tile - ([71b9d3d](https://github.com/roosta/deep_abyss/commit/71b9d3d427794c08524e0f041a22a90d6c405a6c)) - [@roosta](https://github.com/roosta)
+#### Documentation
+- update ldtk version - ([34e085e](https://github.com/roosta/deep_abyss/commit/34e085ee745827bf7ba879d9f3914b1e4d370a1d)) - [@roosta](https://github.com/roosta)
+- update clamp_level docstring - ([594c509](https://github.com/roosta/deep_abyss/commit/594c5097a2b4e0ba4455d473b5a26514ba646d2e)) - [@roosta](https://github.com/roosta)
+#### Features
+- replace homebrew physics with bevy_xpbd - ([9e02972](https://github.com/roosta/deep_abyss/commit/9e02972d7c29c056137cfcea5caf887e31c3eb69)) - [@roosta](https://github.com/roosta)
+- init physics system - ([c35ac8e](https://github.com/roosta/deep_abyss/commit/c35ac8eaae637258c813e20dd762935a8f3cc20b)) - [@roosta](https://github.com/roosta)
+#### Miscellaneous Chores
+- **(deps)** add bevy_xpbd, update bevy_ecs_ldtk - ([fe8568c](https://github.com/roosta/deep_abyss/commit/fe8568c908f0bcdbb64e7430a12a85bbc98c2291)) - [@roosta](https://github.com/roosta)
+
+- - -
+
 ## [0.7.1](https://github.com/roosta/deep_abyss/compare/0.7.0..0.7.1) - 2024-03-07
 #### Bug Fixes
 - fix typo - ([253f774](https://github.com/roosta/deep_abyss/commit/253f774cdd7eaa078feae0a72b3628a55d0d91a1)) - [@roosta](https://github.com/roosta)
