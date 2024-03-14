@@ -44,59 +44,59 @@ fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Wal
 
 /// API: https://github.com/emilk/egui
 fn inspector_ui(world: &mut World) {
-    let mut egui_context = world
-        .query_filtered::<&mut EguiContext, With<PrimaryWindow>>()
-        .single(world)
-        .clone();
+    let mut query = world.query_filtered::<&mut EguiContext, With<PrimaryWindow>>();
+    if let Ok(egui_context) = query.get_single(world) {
+        let mut context = egui_context.clone();
+        let mut fps: f64 = 0.;
+        let diagnostics = world.get_resource::<DiagnosticsStore>();
 
-    let mut fps: f64 = 0.;
-    let diagnostics = world.get_resource::<DiagnosticsStore>();
-
-    // FPS
-    match diagnostics {
-        Some(diag) => {
-            match diag
-                .get(FrameTimeDiagnosticsPlugin::FPS)
-                .and_then(|fps| fps.smoothed())
-            {
-                Some(value) => {
-                    fps = value;
-                }
-                _ => (),
+        // FPS
+        match diagnostics {
+            Some(diag) => {
+                match diag
+                    .get(FrameTimeDiagnosticsPlugin::FPS)
+                    .and_then(|fps| fps.smoothed())
+                    {
+                        Some(value) => {
+                            fps = value;
+                        }
+                        _ => (),
+                    }
+            }
+            None => {
+                warn!("Unable to get DiagnosticsStore, FPS counter will not work")
             }
         }
-        None => {
-            warn!("Unable to get DiagnosticsStore, FPS counter will not work")
-        }
-    }
-    Window::new("Deep Abyss: Debug Inspector").show(egui_context.get_mut(), |ui| {
-        ScrollArea::vertical().show(ui, |ui| {
-            ui_for_world(world, ui);
-            ui_for_world_entities_filtered::<With<Player>>(world, ui, false);
+        Window::new("Deep Abyss: Debug Inspector").show(context.get_mut(), |ui| {
+            ScrollArea::vertical().show(ui, |ui| {
+                ui_for_world(world, ui);
+                ui_for_world_entities_filtered::<With<Player>>(world, ui, false);
 
-            if let Some(mut z_index) = world.get_resource_mut::<ZIndex>() {
-                if ui.button("Toggle collision boxes").clicked() {
-                    if z_index.0 == 0. {
-                        z_index.0 = 50.;
-                    } else if z_index.0 == 50. {
-                        z_index.0 = 0.
+                if let Some(mut z_index) = world.get_resource_mut::<ZIndex>() {
+                    if ui.button("Toggle collision boxes").clicked() {
+                        if z_index.0 == 0. {
+                            z_index.0 = 50.;
+                        } else if z_index.0 == 50. {
+                            z_index.0 = 0.
+                        }
                     }
                 }
-            }
 
-            ui.label(format!("FPS: {}", fps.round()));
-            // ui.heading("State");
-            // ui.label("z index");
-            // ui_for_resource::<ZIndex>(world, ui);
+                ui.label(format!("FPS: {}", fps.round()));
+                // ui.heading("State");
+                // ui.label("z index");
+                // ui_for_resource::<ZIndex>(world, ui);
 
-            // CollapsingHeader::new("State").show(ui, |ui| {
-            //     ui.label("z index");
-            //     ui_for_resource::<ZIndex>(world, ui);
-            // });
-            // ui.heading("Entities");
-            // bevy_inspector_egui::bevy_inspector::ui_for_world_entities(world, ui);
+                // CollapsingHeader::new("State").show(ui, |ui| {
+                //     ui.label("z index");
+                //     ui_for_resource::<ZIndex>(world, ui);
+                // });
+                // ui.heading("Entities");
+                // bevy_inspector_egui::bevy_inspector::ui_for_world_entities(world, ui);
+            });
         });
-    });
+    }
+
 }
 
 // TODO: Only start on dev
