@@ -8,7 +8,7 @@ use bevy_xpbd_2d::prelude::{
 };
 
 /// A simple rectangle type representing a wall of any size
-struct WallRect {
+struct TileRect {
     left: i32,
     right: i32,
     top: i32,
@@ -33,14 +33,14 @@ struct ColliderBundle {
 
 
 #[derive(Default, Component)]
-struct Wall;
+struct Tile;
 
 #[derive(Default, Component, Debug, Deref)]
 pub struct ColliderSize(pub Vec2);
 
 #[derive(Bundle, Default, LdtkIntCell)]
-pub struct WallBundle {
-    wall: Wall,
+pub struct TileBundle {
+    tile: Tile,
 }
 
 pub struct TilemapPlugin;
@@ -79,14 +79,14 @@ pub struct ZIndex(pub f32);
 /// Modified to use bevy_xpbd_2d physics engine instead of rapier
 fn spawn_collisions(
     mut commands: Commands,
-    wall_query: Query<(&GridCoords, &Parent), Added<Wall>>,
-    parent_query: Query<&Parent, Without<Wall>>,
+    tile_query: Query<(&GridCoords, &Parent), Added<Tile>>,
+    parent_query: Query<&Parent, Without<Tile>>,
     level_query: Query<(Entity, &LevelIid)>,
     ldtk_projects: Query<&Handle<LdtkProject>>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
     z_index: Res<ZIndex>,
     // mut player_query: Query<(&mut Velocity, &Transform), With<Player>>,
-    // collider_query: Query<(Entity, &Transform, &Wall), With<Collider>>,
+    // collider_query: Query<(Entity, &Transform, &Tile), With<Collider>>,
 ) {
     let mut rng = rand::thread_rng();
 
@@ -99,7 +99,7 @@ fn spawn_collisions(
     // 2. it lets us easily add the collision entities as children of the appropriate level entity
     let mut level_to_wall_locations: HashMap<Entity, HashSet<GridCoords>> = HashMap::new();
 
-    wall_query.for_each(|(&grid_coords, parent)| {
+    tile_query.for_each(|(&grid_coords, parent)| {
         if let Ok(grandparent) = parent_query.get(parent.get()) {
             level_to_wall_locations
                 .entry(grandparent.get())
@@ -107,7 +107,7 @@ fn spawn_collisions(
                 .insert(grid_coords);
         }
     });
-    if !wall_query.is_empty() {
+    if !tile_query.is_empty() {
         level_query.for_each(|(level_entity, level_iid)| {
             if let Some(level_walls) = level_to_wall_locations.get(&level_entity) {
                 let ldtk_project = ldtk_project_assets
@@ -153,9 +153,9 @@ fn spawn_collisions(
                 }
 
                 // combine "plates" into rectangles across multiple rows
-                let mut rect_builder: HashMap<Plate, WallRect> = HashMap::new();
+                let mut rect_builder: HashMap<Plate, TileRect> = HashMap::new();
                 let mut prev_row: Vec<Plate> = Vec::new();
-                let mut wall_rects: Vec<WallRect> = Vec::new();
+                let mut wall_rects: Vec<TileRect> = Vec::new();
 
                 // an extra empty row so the algorithm "finishes" the rects that touch the top edge
                 plate_stack.push(Vec::new());
@@ -173,7 +173,7 @@ fn spawn_collisions(
                         rect_builder
                             .entry(plate.clone())
                             .and_modify(|e| e.top += 1)
-                            .or_insert(WallRect {
+                            .or_insert(TileRect {
                                 bottom: y as i32,
                                 top: y as i32,
                                 left: plate.left,

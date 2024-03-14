@@ -10,7 +10,7 @@ use debug::DebugPlugin;
 use camera::CameraPlugin;
 
 use player::{PlayerBundle, PlayerPlugin};
-use tilemap::{TilemapPlugin, WallBundle, ZIndex};
+use tilemap::{TilemapPlugin, TileBundle, ZIndex};
 use physics::PhysicsPlugin;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -35,7 +35,7 @@ fn main() {
         .insert_resource(ZIndex(0.))
         .add_systems(Startup, setup)
         .register_ldtk_entity::<PlayerBundle>("Player")
-        .register_ldtk_int_cell::<WallBundle>(1)
+        .register_ldtk_int_cell::<TileBundle>(1)
         // .init_resource::<LevelWalls>()
         .run();
 }
