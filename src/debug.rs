@@ -20,7 +20,7 @@ use bevy_inspector_egui::bevy_inspector::{
 // use std::any::TypeId;
 pub struct DebugPlugin;
 
-use crate::player::{Direction, Player, Velocity, OnGround, Physics};
+use crate::player::Player;
 
 use crate::tilemap::{Collider, ZIndex};
 
@@ -33,14 +33,14 @@ fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Col
     }
 }
 
-fn _update_print(query: Query<(&Velocity, &Transform), With<Player>>) {
-    for (velocity, transform) in &query {
-        println!(
-            "Velocity: [{:#?}, {:#?}], [{:#?}, {:#?}]",
-            velocity.x, velocity.y, transform.translation.x, transform.translation.y
-        )
-    }
-}
+// fn _update_print(query: Query<(&Velocity, &Transform), With<Player>>) {
+//     for (velocity, transform) in &query {
+//         println!(
+//             "Velocity: [{:#?}, {:#?}], [{:#?}, {:#?}]",
+//             velocity.x, velocity.y, transform.translation.x, transform.translation.y
+//         )
+//     }
+// }
 
 /// API: https://github.com/emilk/egui
 fn inspector_ui(world: &mut World) {
@@ -107,11 +107,8 @@ impl Plugin for DebugPlugin {
         app.add_plugins(bevy_inspector_egui::DefaultInspectorConfigPlugin); // adds default options and `InspectorEguiImpl`s
         app.add_plugins(FrameTimeDiagnosticsPlugin::default());
         app.add_systems(Update, (inspector_ui, apply_z_index));
-        app.register_type::<Velocity>();
         app.register_type::<ZIndex>();
         app.register_type::<Direction>();
-        app.register_type::<OnGround>();
-        app.register_type::<Physics>();
     }
     // }
 }

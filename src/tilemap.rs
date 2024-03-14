@@ -2,6 +2,10 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use rand::Rng;
 use std::collections::{HashMap, HashSet};
+use bevy_xpbd_2d::prelude::{
+    RigidBody,
+    Collider
+};
 
 /// A simple rectangle type representing a wall of any size
 struct WallRect {
@@ -19,15 +23,14 @@ struct Plate {
     right: i32,
 }
 
-#[derive(Bundle, Default, LdtkIntCell)]
+#[derive(Bundle)]
 struct ColliderBundle {
     sprite_bundle: SpriteBundle,
-    collider: Collider,
     size: ColliderSize,
+    rigid_body: RigidBody,
+    collider: Collider,
 }
 
-#[derive(Default, Component)]
-pub struct Collider;
 
 #[derive(Default, Component)]
 struct Wall;
@@ -73,7 +76,7 @@ pub struct ZIndex(pub f32);
 /// Source: https://github.com/Trouv/bevy_ecs_ldtk/blob/201d908ae3e4f3deeb40de228f234c414c6b3141/examples/platformer/systems.rs#L62-L229
 ///
 /// Modified roosta<mail@roosta.sh>
-/// Modified to use my own collision system instead of using rapier
+/// Modified to use bevy_xpbd_2d physics engine instead of rapier
 fn spawn_collisions(
     mut commands: Commands,
     wall_query: Query<(&GridCoords, &Parent), Added<Wall>>,
@@ -208,7 +211,8 @@ fn spawn_collisions(
                                 ..default()
                             },
                             size: ColliderSize(Vec2::new(width, height)),
-                            collider: Collider,
+                            collider: Collider::cuboid(width, height),
+                            rigid_body: RigidBody::Static,
                         });
                     }
                 });
