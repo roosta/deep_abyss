@@ -22,10 +22,10 @@ pub struct DebugPlugin;
 
 use crate::player::Player;
 
-use crate::tilemap::{Collider, ZIndex};
+use crate::tilemap::{ZIndex, Wall};
 
 /// Change z_index of all colliders on z_index change
-fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Collider>>) {
+fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Wall>>) {
     if z_index.is_changed() {
         for mut transform in &mut query {
             transform.translation.z = z_index.0

@@ -29,8 +29,11 @@ struct ColliderBundle {
     size: ColliderSize,
     rigid_body: RigidBody,
     collider: Collider,
+    wall: Wall,
 }
 
+#[derive(Component, Default)]
+pub struct Wall;
 
 #[derive(Default, Component)]
 struct Tile;
@@ -213,6 +216,7 @@ fn spawn_collisions(
                             size: ColliderSize(Vec2::new(width, height)),
                             collider: Collider::cuboid(width, height),
                             rigid_body: RigidBody::Static,
+                            wall: Wall::default()
                         });
                     }
                 });
