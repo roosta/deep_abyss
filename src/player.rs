@@ -97,7 +97,7 @@ impl Default for MovementBundle {
 impl Default for PhysicsBundle {
     fn default() -> Self {
         let player_size = Vec2::new(PLAYER_WIDTH, PLAYER_HEIGHT);
-        let collider = Collider::cuboid(player_size.x, player_size.y);
+        let collider = Collider::rectangle(player_size.x, player_size.y);
 
         // Create shape caster as a slightly smaller version of collider
         let mut caster_shape = collider.clone();
@@ -108,7 +108,7 @@ impl Default for PhysicsBundle {
             restitution: Restitution::ZERO.with_combine_rule(CoefficientCombine::Min),
             collider,
             locked_axis: LockedAxes::ROTATION_LOCKED,
-            ground_caster: ShapeCaster::new(caster_shape, Vector::ZERO, 0.0, Vector::NEG_Y)
+            ground_caster: ShapeCaster::new(caster_shape, Vector::ZERO, 0.0, Direction2d::NEG_Y)
                 .with_max_time_of_impact(10.0),
             friction: Friction::ZERO.with_combine_rule(CoefficientCombine::Min),
             collider_density: ColliderDensity(2.0),
@@ -124,10 +124,10 @@ pub struct PlayerPlugin;
 /// Sends [`MovementAction`] events based on keyboard input.
 fn keyboard_input(
     mut movement_event_writer: EventWriter<MovementAction>,
-    keyboard_input: Res<Input<KeyCode>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
 ) {
-    let left = keyboard_input.any_pressed([KeyCode::A, KeyCode::Left]);
-    let right = keyboard_input.any_pressed([KeyCode::D, KeyCode::Right]);
+    let left = keyboard_input.any_pressed([KeyCode::KeyA, KeyCode::ArrowLeft]);
+    let right = keyboard_input.any_pressed([KeyCode::KeyD, KeyCode::ArrowRight]);
 
     let horizontal = right as i8 - left as i8;
     let direction = horizontal as Scalar;

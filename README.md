@@ -10,7 +10,7 @@ Nautical roguelite game for multiple platforms written in rust using
 
 To build a development build, clone and run:
 ```sh
-cargo run --features bevy/dynamic_linking
+cargo run
 ```
 ## Releases
 

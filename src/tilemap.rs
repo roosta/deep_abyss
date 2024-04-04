@@ -102,7 +102,7 @@ fn spawn_collisions(
     // 2. it lets us easily add the collision entities as children of the appropriate level entity
     let mut level_to_wall_locations: HashMap<Entity, HashSet<GridCoords>> = HashMap::new();
 
-    tile_query.for_each(|(&grid_coords, parent)| {
+    tile_query.iter().for_each(|(&grid_coords, parent)| {
         if let Ok(grandparent) = parent_query.get(parent.get()) {
             level_to_wall_locations
                 .entry(grandparent.get())
@@ -111,7 +111,7 @@ fn spawn_collisions(
         }
     });
     if !tile_query.is_empty() {
-        level_query.for_each(|(level_entity, level_iid)| {
+        level_query.iter().for_each(|(level_entity, level_iid)| {
             if let Some(level_walls) = level_to_wall_locations.get(&level_entity) {
                 let ldtk_project = ldtk_project_assets
                     .get(ldtk_projects.single())
@@ -214,7 +214,7 @@ fn spawn_collisions(
                                 ..default()
                             },
                             size: ColliderSize(Vec2::new(width, height)),
-                            collider: Collider::cuboid(width, height),
+                            collider: Collider::rectangle(width, height),
                             rigid_body: RigidBody::Static,
                             wall: Wall::default()
                         });

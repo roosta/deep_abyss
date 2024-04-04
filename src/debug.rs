@@ -54,7 +54,7 @@ fn inspector_ui(world: &mut World) {
         match diagnostics {
             Some(diag) => {
                 match diag
-                    .get(FrameTimeDiagnosticsPlugin::FPS)
+                    .get(&FrameTimeDiagnosticsPlugin::FPS)
                     .and_then(|fps| fps.smoothed())
                     {
                         Some(value) => {
