@@ -9,6 +9,7 @@ bevy_egui = "0.26"
 bevy_ecs_ldtk = { git = "https://github.com/Trouv/bevy_ecs_ldtk.git" }
 rand = "0.8.5"
 bevy = { version = "0.13", features = ["file_watcher"] }
+bevy_dylib = "0.13"
 bevy_xpbd_2d = "0.4"
 
 [patch.crates-io]
