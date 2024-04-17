@@ -212,7 +212,6 @@ impl Plugin for PlayerPlugin {
         app.add_systems(Update, (
                 keyboard_input,
                 update_grounded,
-                apply_deferred,
                 movement,
                 apply_movement_damping,
         ).chain());
