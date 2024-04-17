@@ -6,6 +6,7 @@ mod physics;
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_xpbd_2d::prelude::PrepareConfig;
 use debug::DebugPlugin;
 use camera::CameraPlugin;
 
@@ -33,6 +34,12 @@ fn main() {
         ))
         .insert_resource(LevelSelection::index(0))
         .insert_resource(ZIndex(0.))
+
+        //  
+        .insert_resource(PrepareConfig {
+            position_to_transform: false,
+            transform_to_position: true,
+        })
         .add_systems(Startup, setup)
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_int_cell::<TileBundle>(1)
