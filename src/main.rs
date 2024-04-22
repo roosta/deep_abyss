@@ -34,8 +34,6 @@ fn main() {
         ))
         .insert_resource(LevelSelection::index(0))
         .insert_resource(ZIndex(0.))
-
-        //  
         .insert_resource(PrepareConfig {
             position_to_transform: false,
             transform_to_position: true,
