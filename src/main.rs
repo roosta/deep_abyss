@@ -3,6 +3,7 @@ mod player;
 mod tilemap;
 mod camera;
 mod physics;
+mod chain;
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;

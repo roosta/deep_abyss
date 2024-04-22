@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
+use crate::chain;
+
 // use bevy_inspector_egui::Inspectable;
 
 // use crate::tilemap::ColliderSize;
@@ -215,5 +217,6 @@ impl Plugin for PlayerPlugin {
                 movement,
                 apply_movement_damping,
         ).chain());
+        app.add_systems(Update, chain::spawn);
     }
 }
