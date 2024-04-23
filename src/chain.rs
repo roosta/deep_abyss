@@ -66,7 +66,7 @@ pub fn spawn(
                     .with_local_anchor_2(Vector::Y * (particle_radius * 2.0 + 1.0))
                     .with_linear_velocity_damping(0.1)
                     .with_angular_velocity_damping(1.0)
-                    .with_compliance(0.00000001),
+                    .with_compliance(0.0),
                     );
 
                 previous_particle = current_particle;
@@ -76,7 +76,7 @@ pub fn spawn(
                 RevoluteJoint::new(previous_particle, entity)
                 .with_linear_velocity_damping(0.1)
                 .with_angular_velocity_damping(1.0)
-                .with_compliance(0.00000001),
+                .with_compliance(0.0),
                 );
         }
 }
