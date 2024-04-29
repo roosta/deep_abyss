@@ -6,6 +6,7 @@ use bevy_xpbd_2d::{math::*, prelude::*};
 
 // use bevy_ecs_ldtk::prelude::LevelIid;
 use crate::player::Player;
+use crate::physics::GameLayer;
 
 #[derive(Component)]
 struct Anchor;
@@ -21,8 +22,9 @@ pub fn spawn(
             let particle_radius = 3.0;
             let particle_mesh: Mesh2dHandle = meshes.add(Circle::new(particle_radius as f32)).into();
             let particle_material = materials.add(Color::rgb(0.2, 0.7, 0.9));
-            let particle_count = 10;
+            let particle_count = 7;
             let z_index = 5.;
+            let collider = Collider::circle(particle_radius);
 
 
             // Spawn kinematic particle that acts as anchor, temporarily visible
@@ -47,7 +49,8 @@ pub fn spawn(
                 let current_particle = commands
                     .spawn((
                             RigidBody::Dynamic,
-                            MassPropertiesBundle::new_computed(&Collider::circle(particle_radius), 1.0),
+                            MassPropertiesBundle::new_computed(&collider, 1.0),
+                            collider.clone(),
                             MaterialMesh2dBundle {
                                 mesh: particle_mesh.clone(),
                                 material: particle_material.clone(),
@@ -58,6 +61,11 @@ pub fn spawn(
                                     ),
                                     ..default()
                             },
+                            CollisionLayers::new(
+                                GameLayer::Chain,
+                                [GameLayer::Ground]
+                            )
+
                             ))
                     .id();
 

@@ -4,7 +4,8 @@ use bevy_xpbd_2d::{
     prelude::{
         SubstepCount,
         Gravity,
-        PhysicsPlugins
+        PhysicsPlugins,
+        PhysicsLayer
     },
     math::{
         Vector,
@@ -13,6 +14,14 @@ use bevy_xpbd_2d::{
 
 };
 pub struct PhysicsPlugin;
+
+#[derive(PhysicsLayer)]
+pub enum GameLayer {
+    Player, // Layer 0
+    Enemy,  // Layer 1
+    Ground, // Layer 2
+    Chain   // Layer 3
+}
 
 const GRAVITY: Scalar = 30.0;
 

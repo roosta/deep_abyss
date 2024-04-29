@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::chain;
+use crate::physics::GameLayer;
 
 // use bevy_inspector_egui::Inspectable;
 
@@ -18,6 +19,7 @@ use bevy_xpbd_2d::{
         ShapeCaster,
         ColliderDensity,
         GravityScale,
+        CollisionLayers,
     },
     components::LockedAxes,
     math::{Scalar, Vector}
@@ -66,6 +68,7 @@ pub struct PhysicsBundle {
     friction: Friction,
     collider_density: ColliderDensity,
     gravity_scale: GravityScale,
+    collision_layers: CollisionLayers
 
 }
 
@@ -115,6 +118,10 @@ impl Default for PhysicsBundle {
             friction: Friction::ZERO.with_combine_rule(CoefficientCombine::Min),
             collider_density: ColliderDensity(2.0),
             gravity_scale: GravityScale(1.5),
+            collision_layers: CollisionLayers::new(
+                GameLayer::Player,
+                [GameLayer::Ground, GameLayer::Enemy]
+            )
         }
     }
 

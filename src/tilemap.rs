@@ -4,8 +4,11 @@ use rand::Rng;
 use std::collections::{HashMap, HashSet};
 use bevy_xpbd_2d::prelude::{
     RigidBody,
-    Collider
+    Collider,
+    CollisionLayers,
 };
+
+use crate::physics::GameLayer;
 
 /// A simple rectangle type representing a wall of any size
 struct TileRect {
@@ -30,6 +33,7 @@ struct ColliderBundle {
     rigid_body: RigidBody,
     collider: Collider,
     wall: Wall,
+    collision_layers: CollisionLayers
 }
 
 #[derive(Component, Default)]
@@ -216,7 +220,11 @@ fn spawn_collisions(
                             size: ColliderSize(Vec2::new(width, height)),
                             collider: Collider::rectangle(width, height),
                             rigid_body: RigidBody::Static,
-                            wall: Wall::default()
+                            wall: Wall::default(),
+                            collision_layers: CollisionLayers::new(
+                                GameLayer::Ground,
+                                [GameLayer::Player, GameLayer::Chain]
+                            )
                         });
                     }
                 });
