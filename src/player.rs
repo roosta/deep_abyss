@@ -224,6 +224,6 @@ impl Plugin for PlayerPlugin {
                 movement,
                 apply_movement_damping,
         ).chain());
-        app.add_systems(Update, chain::spawn);
+        // app.add_systems(Update, chain::spawn);
     }
 }
