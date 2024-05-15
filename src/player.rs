@@ -85,6 +85,9 @@ pub struct PlayerBundle {
     physics: PhysicsBundle,
     movement: MovementBundle,
 
+    #[worldly]
+    worldly: Worldly,
+
     #[sprite_sheet_bundle]
     sprite_bundle: SpriteSheetBundle,
 }

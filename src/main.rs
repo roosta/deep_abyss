@@ -39,6 +39,12 @@ fn main() {
             position_to_transform: false,
             transform_to_position: true,
         })
+        .insert_resource(LdtkSettings {
+            level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {
+                load_level_neighbors: true,
+            },
+            ..default()
+        })
         .add_systems(Startup, setup)
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_int_cell::<TileBundle>(1)

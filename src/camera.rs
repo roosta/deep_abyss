@@ -102,6 +102,6 @@ impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup);
         app.add_systems(Update, clamp_viewport);
-        app.add_systems(Update, (follow_player, clamp_level).chain());
+        app.add_systems(Update, (follow_player/* , clamp_level */).chain());
     }
 }
