@@ -14,7 +14,7 @@
 	"nextUid": 71,
 	"identifierStyle": "Capitalize",
 	"toc": [],
-	"worldLayout": "LinearVertical",
+	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
 	"defaultLevelWidth": 768,
@@ -866,8 +866,8 @@
 			"identifier": "Surface",
 			"iid": "be8059a0-fec0-11ee-a7c8-3d38ef9d3a0f",
 			"uid": 70,
-			"worldX": -1,
-			"worldY": -1,
+			"worldX": 0,
+			"worldY": 48,
 			"worldDepth": 0,
 			"pxWid": 768,
 			"pxHei": 256,
@@ -919,7 +919,9 @@
 							"height": 16,
 							"defUid": 69,
 							"px": [368,48],
-							"fieldInstances": []
+							"fieldInstances": [],
+							"__worldX": 368,
+							"__worldY": 96
 						}
 					]
 				},
@@ -1779,14 +1781,14 @@
 					"entityInstances": []
 				}
 			],
-			"__neighbours": []
+			"__neighbours": [{ "levelIid": "a2b00c70-66b0-11ec-9cd7-cfc05854da53", "dir": "s" }]
 		},
 		{
 			"identifier": "Shallows",
 			"iid": "a2b00c70-66b0-11ec-9cd7-cfc05854da53",
 			"uid": 0,
-			"worldX": -1,
-			"worldY": -1,
+			"worldX": 0,
+			"worldY": 304,
 			"worldDepth": 0,
 			"pxWid": 768,
 			"pxHei": 608,
@@ -4265,7 +4267,7 @@
 					"entityInstances": []
 				}
 			],
-			"__neighbours": []
+			"__neighbours": [{ "levelIid": "be8059a0-fec0-11ee-a7c8-3d38ef9d3a0f", "dir": "n" }]
 		}
 	],
 	"worlds": [],
