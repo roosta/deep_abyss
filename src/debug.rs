@@ -22,7 +22,7 @@ pub struct DebugPlugin;
 
 use crate::player::Player;
 
-use crate::tilemap::{ZIndex, Wall};
+use crate::level::{ZIndex, Wall};
 
 /// Change z_index of all colliders on z_index change
 fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Wall>>) {

@@ -1,6 +1,6 @@
 mod debug;
 mod player;
-mod tilemap;
+mod level;
 mod camera;
 mod physics;
 mod chain;
@@ -12,7 +12,7 @@ use debug::DebugPlugin;
 use camera::CameraPlugin;
 
 use player::{PlayerBundle, PlayerPlugin};
-use tilemap::{TilemapPlugin, TileBundle, ZIndex};
+use level::{LevelPlugin, TileBundle, ZIndex};
 use physics::PhysicsPlugin;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -28,7 +28,7 @@ fn main() {
             DefaultPlugins.set(ImagePlugin::default_nearest()),
             DebugPlugin,
             PhysicsPlugin,
-            TilemapPlugin,
+            LevelPlugin,
             PlayerPlugin,
             CameraPlugin,
             LdtkPlugin

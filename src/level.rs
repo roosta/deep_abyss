@@ -51,7 +51,7 @@ pub struct TileBundle {
     tile: Tile,
 }
 
-pub struct TilemapPlugin;
+pub struct LevelPlugin;
 
 #[derive(Debug, Reflect, Resource, Default)]
 #[reflect(Resource)]
@@ -269,7 +269,7 @@ fn level_selection_follow_player(
         }
     }
 }
-impl Plugin for TilemapPlugin {
+impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, (spawn_collisions, level_selection_follow_player));
     }

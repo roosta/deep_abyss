@@ -6,7 +6,7 @@ use crate::physics::GameLayer;
 
 // use bevy_inspector_egui::Inspectable;
 
-// use crate::tilemap::ColliderSize;
+// use crate::level::ColliderSize;
 use bevy_xpbd_2d::{
     prelude::{
         Collider,
