@@ -22,6 +22,7 @@ pub struct DebugPlugin;
 
 use crate::player::Player;
 
+use crate::camera::CameraState;
 use crate::level::{ZIndex, Wall};
 
 /// Change z_index of all colliders on z_index change
@@ -43,7 +44,9 @@ fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Wal
 // }
 
 /// API: https://github.com/emilk/egui
-fn inspector_ui(world: &mut World) {
+fn inspector_ui(
+    world: &mut World
+) {
     let mut query = world.query_filtered::<&mut EguiContext, With<PrimaryWindow>>();
     if let Ok(egui_context) = query.get_single(world) {
         let mut context = egui_context.clone();
@@ -82,6 +85,14 @@ fn inspector_ui(world: &mut World) {
                     }
                 }
 
+                if ui.button("Toggle camera control").clicked() {
+                    let value = world.get_resource::<State<CameraState>>().unwrap().get().clone();
+                    let mut next = world.get_resource_mut::<NextState<CameraState>>().unwrap();
+                    match value {
+                        CameraState::Auto => next.set(CameraState::Manual),
+                        CameraState::Manual => next.set(CameraState::Auto),
+                    }
+                }
                 ui.label(format!("FPS: {}", fps.round()));
                 // ui.heading("State");
                 // ui.label("z index");

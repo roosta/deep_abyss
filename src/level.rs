@@ -11,6 +11,9 @@ use bevy_xpbd_2d::prelude::{
 use crate::player::Player;
 use crate::physics::GameLayer;
 
+pub const SURFACE_IID: &str = "be8059a0-fec0-11ee-a7c8-3d38ef9d3a0f";
+pub const BOTTOM_IID: &str = "f450ce20-fec0-11ee-a3f3-2d25d2c76d98";
+
 /// A simple rectangle type representing a wall of any size
 struct TileRect {
     left: i32,
