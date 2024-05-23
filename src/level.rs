@@ -237,7 +237,9 @@ fn spawn_collisions(
     }
 }
 
-fn level_selection_follow_player(
+/// Modify level selection based on player position
+/// TODO: Unload previous levels
+fn follow_player(
     players: Query<&GlobalTransform, With<Player>>,
     levels: Query<(&LevelIid, &GlobalTransform)>,
     ldtk_projects: Query<&Handle<LdtkProject>>,
@@ -274,6 +276,6 @@ fn level_selection_follow_player(
 }
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (spawn_collisions, level_selection_follow_player));
+        app.add_systems(Update, (spawn_collisions, follow_player));
     }
 }
