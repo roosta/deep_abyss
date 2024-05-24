@@ -5,6 +5,7 @@ use bevy::window::PrimaryWindow;
 use bevy_egui::{
     egui::{
         ScrollArea,
+        SelectableLabel,
         // CollapsingHeader
         Window,
     },
@@ -24,6 +25,12 @@ use crate::player::Player;
 
 use crate::camera::CameraState;
 use crate::level::{ZIndex, Wall};
+
+
+#[derive(Default, Resource)]
+struct DebugState {
+    camera_control: CameraState
+}
 
 /// Change z_index of all colliders on z_index change
 fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Wall>>) {
@@ -45,7 +52,8 @@ fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Wal
 
 /// API: https://github.com/emilk/egui
 fn inspector_ui(
-    world: &mut World
+    world: &mut World,
+    mut local: Local<DebugState>
 ) {
     let mut query = world.query_filtered::<&mut EguiContext, With<PrimaryWindow>>();
     if let Ok(egui_context) = query.get_single(world) {
@@ -85,14 +93,18 @@ fn inspector_ui(
                     }
                 }
 
-                if ui.button("Toggle camera control").clicked() {
-                    let value = world.get_resource::<State<CameraState>>().unwrap().get().clone();
-                    let mut next = world.get_resource_mut::<NextState<CameraState>>().unwrap();
-                    match value {
-                        CameraState::Auto => next.set(CameraState::Manual),
-                        CameraState::Manual => next.set(CameraState::Auto),
+                let mut next = world.get_resource_mut::<NextState<CameraState>>().unwrap();
+                ui.horizontal(|ui| {
+                    ui.label("Camera control");
+                    if ui.add(SelectableLabel::new(local.camera_control == CameraState::Auto, "Auto")).clicked() {
+                        next.set(CameraState::Auto);
+                        local.camera_control = CameraState::Auto;
                     }
-                }
+                    if ui.add(SelectableLabel::new(local.camera_control == CameraState::Manual, "Manual")).clicked() {
+                        next.set(CameraState::Manual);
+                        local.camera_control = CameraState::Manual;
+                    }
+                    });
                 ui.label(format!("FPS: {}", fps.round()));
                 // ui.heading("State");
                 // ui.label("z index");
@@ -115,7 +127,11 @@ impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
         // if cfg!(debug_assertions) {
         app.add_plugins(EguiPlugin);
-        app.add_plugins(bevy_inspector_egui::DefaultInspectorConfigPlugin); // adds default options and `InspectorEguiImpl`s
+        app.insert_resource(ZIndex(0.));
+        app.insert_resource(DebugState {
+            camera_control: CameraState::Auto
+        });
+        app.add_plugins(bevy_inspector_egui::DefaultInspectorConfigPlugin);
         app.add_plugins(FrameTimeDiagnosticsPlugin::default());
         app.add_systems(Update, (inspector_ui, apply_z_index));
         app.register_type::<ZIndex>();
