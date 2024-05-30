@@ -56,10 +56,6 @@ pub struct TileBundle {
 
 pub struct LevelPlugin;
 
-#[derive(Debug, Reflect, Resource, Default)]
-#[reflect(Resource)]
-pub struct ZIndex(pub f32);
-
 // #[derive(Default, Resource)]
 // struct LevelWalls {
 //     wall_locations: HashSet<GridCoords>,
@@ -95,7 +91,6 @@ fn spawn_collisions(
     level_query: Query<(Entity, &LevelIid)>,
     ldtk_projects: Query<&Handle<LdtkProject>>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
-    z_index: Res<ZIndex>,
     // mut player_query: Query<(&mut Velocity, &Transform), With<Player>>,
     // collider_query: Query<(Entity, &Transform, &Tile), With<Collider>>,
 ) {
@@ -218,7 +213,7 @@ fn spawn_collisions(
                                     custom_size: Some(Vec2::new(width, height)),
                                     ..default()
                                 },
-                                transform: Transform::from_xyz(center_x, center_y, z_index.0),
+                                transform: Transform::from_xyz(center_x, center_y, 0.0),
                                 ..default()
                             },
                             size: ColliderSize(Vec2::new(width, height)),

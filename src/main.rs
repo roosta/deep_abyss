@@ -12,7 +12,7 @@ use debug::DebugPlugin;
 use camera::CameraPlugin;
 
 use player::{PlayerBundle, PlayerPlugin};
-use level::{LevelPlugin, TileBundle, ZIndex};
+use level::{LevelPlugin, TileBundle};
 use physics::PhysicsPlugin;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -34,7 +34,6 @@ fn main() {
             LdtkPlugin
         ))
         .insert_resource(LevelSelection::index(0))
-        .insert_resource(ZIndex(0.))
         // This is a bit of a hack getting xpbd to leave z-index alone, see 1db403b
         .insert_resource(PrepareConfig {
             position_to_transform: false,

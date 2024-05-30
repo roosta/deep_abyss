@@ -24,19 +24,43 @@ pub struct DebugPlugin;
 use crate::player::Player;
 
 use crate::camera::CameraState;
-use crate::level::{ZIndex, Wall};
+use crate::level::Wall;
 
+
+const HIDDEN_Z: f32 = 0.0;
+const VISIBLE_Z: f32 = 50.0;
+
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, Event)]
+enum WallColliderVisibility {
+    Visible,
+    #[default]
+    Hidden
+}
 
 #[derive(Default, Resource)]
 struct DebugState {
-    camera_control: CameraState
+    camera_control: CameraState,
+    wall_visibility: WallColliderVisibility
 }
 
 /// Change z_index of all colliders on z_index change
-fn apply_z_index(z_index: Res<ZIndex>, mut query: Query<&mut Transform, With<Wall>>) {
-    if z_index.is_changed() {
-        for mut transform in &mut query {
-            transform.translation.z = z_index.0
+fn apply_z_index(
+    mut query: Query<&mut Transform, With<Wall>>,
+    mut reader: EventReader<WallColliderVisibility>,
+) {
+
+    for event in reader.read() {
+        match event {
+            WallColliderVisibility::Visible => {
+                for mut transform in &mut query {
+                    transform.translation.z = VISIBLE_Z;
+                }
+            },
+            WallColliderVisibility::Hidden => {
+                for mut transform in &mut query {
+                    transform.translation.z = HIDDEN_Z;
+                }
+            }
         }
     }
 }
@@ -83,15 +107,22 @@ fn inspector_ui(
                 ui_for_world(world, ui);
                 ui_for_world_entities_filtered::<With<Player>>(world, ui, false);
 
-                if let Some(mut z_index) = world.get_resource_mut::<ZIndex>() {
-                    if ui.button("Toggle collision boxes").clicked() {
-                        if z_index.0 == 0. {
-                            z_index.0 = 50.;
-                        } else if z_index.0 == 50. {
-                            z_index.0 = 0.
-                        }
+                ui.horizontal(|ui| {
+                    ui.label("Frames per second");
+                    ui.label(fps.round().to_string());
+                });
+
+                ui.horizontal(|ui| {
+                    ui.label("Collision boxes");
+                    if ui.add(SelectableLabel::new(local.wall_visibility == WallColliderVisibility::Hidden, "Hidden")).clicked() {
+                        local.wall_visibility = WallColliderVisibility::Hidden;
+                        world.send_event(WallColliderVisibility::Hidden);
                     }
-                }
+                    if ui.add(SelectableLabel::new(local.wall_visibility == WallColliderVisibility::Visible, "Visible")).clicked() {
+                        local.wall_visibility = WallColliderVisibility::Visible;
+                        world.send_event(WallColliderVisibility::Visible);
+                    }
+                });
 
                 let mut next = world.get_resource_mut::<NextState<CameraState>>().unwrap();
                 ui.horizontal(|ui| {
@@ -104,8 +135,7 @@ fn inspector_ui(
                         next.set(CameraState::Manual);
                         local.camera_control = CameraState::Manual;
                     }
-                    });
-                ui.label(format!("FPS: {}", fps.round()));
+                });
                 // ui.heading("State");
                 // ui.label("z index");
                 // ui_for_resource::<ZIndex>(world, ui);
@@ -127,15 +157,10 @@ impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
         // if cfg!(debug_assertions) {
         app.add_plugins(EguiPlugin);
-        app.insert_resource(ZIndex(0.));
-        app.insert_resource(DebugState {
-            camera_control: CameraState::Auto
-        });
+        app.add_event::<WallColliderVisibility>();
         app.add_plugins(bevy_inspector_egui::DefaultInspectorConfigPlugin);
         app.add_plugins(FrameTimeDiagnosticsPlugin::default());
         app.add_systems(Update, (inspector_ui, apply_z_index));
-        app.register_type::<ZIndex>();
-        app.register_type::<Direction>();
     }
     // }
 }
