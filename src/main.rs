@@ -11,8 +11,11 @@ use bevy_xpbd_2d::prelude::PrepareConfig;
 use debug::DebugPlugin;
 use camera::CameraPlugin;
 
-use player::{PlayerBundle, PlayerPlugin};
 use level::{LevelPlugin, TileBundle};
+use player::{
+    // PlayerBundle,
+    PlayerPlugin
+};
 use physics::PhysicsPlugin;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -46,7 +49,7 @@ fn main() {
             ..default()
         })
         .add_systems(Startup, setup)
-        .register_ldtk_entity::<PlayerBundle>("Player")
+        // .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_int_cell::<TileBundle>(1)
         // .init_resource::<LevelWalls>()
         .run();
