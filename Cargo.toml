@@ -10,6 +10,7 @@ bevy_ecs_ldtk = { git = "https://github.com/Trouv/bevy_ecs_ldtk.git" }
 rand = "0.8.5"
 bevy = { version = "0.13", features = ["file_watcher"] }
 bevy_xpbd_2d = "0.4"
+bevy_asset_loader = "0.20.2"
 
 [patch.crates-io]
 bevy_ecs_tilemap = { git = "https://github.com/StarArawn/bevy_ecs_tilemap" }
