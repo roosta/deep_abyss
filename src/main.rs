@@ -8,6 +8,7 @@ mod chain;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_xpbd_2d::prelude::PrepareConfig;
+use bevy_asset_loader::prelude::*;
 use debug::DebugPlugin;
 use camera::CameraPlugin;
 
@@ -18,9 +19,25 @@ use player::{
 };
 use physics::PhysicsPlugin;
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
+enum AppState {
+    #[default]
+    Loading,
+    Setup,
+    InGame,
+    Paused,
+}
+
+
+#[derive(AssetCollection, Resource)]
+struct LevelAssets {
+    #[asset(path = "deep_abyss.ldtk")]
+    ldtk_handle: Handle<LdtkProject>,
+}
+
+fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
     commands.spawn(LdtkWorldBundle {
-        ldtk_handle: asset_server.load("deep_abyss.ldtk"),
+        ldtk_handle: level_assets.ldtk_handle.clone(),
         ..Default::default()
     });
 }
@@ -42,15 +59,21 @@ fn main() {
             position_to_transform: false,
             transform_to_position: true,
         })
+        .add_systems(OnEnter(AppState::Setup), spawn_level)
+        .add_loading_state(
+            LoadingState::new(AppState::Loading)
+                .continue_to_state(AppState::Setup)
+                .load_collection::<LevelAssets>(),
+        )
         .insert_resource(LdtkSettings {
             level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {
                 load_level_neighbors: true,
             },
             ..default()
         })
-        .add_systems(Startup, setup)
         // .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_int_cell::<TileBundle>(1)
         // .init_resource::<LevelWalls>()
+        .init_state::<AppState>()
         .run();
 }
