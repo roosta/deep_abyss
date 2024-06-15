@@ -28,6 +28,8 @@ const MAX_HEIGHT: f32 = 432.0;
 use crate::player::Player;
 use crate::level::{SURFACE_IID, BOTTOM_IID};
 
+use crate::AppState;
+
 fn setup(mut commands: Commands) {
     let mut camera_game = Camera2dBundle::default();
     camera_game.projection.scaling_mode = ScalingMode::AutoMax {
@@ -130,12 +132,40 @@ fn clamp_viewport(
     }
 }
 
+fn go_to_start(
+    ldtk_projects: Query<&Handle<LdtkProject>>,
+    ldtk_project_assets: Res<Assets<LdtkProject>>,
+    mut camera_query: Query<(&mut Transform, &OrthographicProjection), With<GameViewport>,
+    >,
+) {
+
+    let (mut camera_transform, projection) = camera_query.single_mut();
+    if let Some(ldtk_project) = ldtk_project_assets.get(ldtk_projects.single()) {
+
+        let surface = ldtk_project
+            .get_raw_level_by_iid(&SURFACE_IID.to_string())
+            .expect("Unable to get surface level");
+        let center = (surface.px_wid as f32 - projection.area.max.x / 2.0) / 2.0;
+        camera_transform.translation.x = center;
+
+        let top = (surface.world_y * -1) as f32 - projection.area.max.y;
+        camera_transform.translation.y = top;
+    }
+
+}
+
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<CameraState>();
         app.add_systems(Startup, setup);
         app.add_systems(Last, clamp_viewport);
         app.add_systems(Update, keyboard_control.run_if(in_state(CameraState::Manual)));
-        app.add_systems(Update, (follow_player, clamp_world).chain().run_if(in_state(CameraState::Auto)));
+        app.add_systems(OnEnter(AppState::Surface), go_to_start);
+        app.add_systems(Update,
+            (follow_player, clamp_world)
+            .chain()
+            .run_if(in_state(CameraState::Auto))
+            .run_if(in_state(AppState::Diving))
+            );
     }
 }

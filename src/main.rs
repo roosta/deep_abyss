@@ -24,7 +24,8 @@ enum AppState {
     #[default]
     Loading,
     Setup,
-    InGame,
+    Surface,
+    Diving,
     Paused,
 }
 
@@ -35,11 +36,16 @@ struct LevelAssets {
     ldtk_handle: Handle<LdtkProject>,
 }
 
-fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
+fn spawn_level(
+    mut commands: Commands,
+    level_assets: Res<LevelAssets>,
+    mut state: ResMut<NextState<AppState>>
+) {
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: level_assets.ldtk_handle.clone(),
         ..Default::default()
     });
+    state.set(AppState::Surface);
 }
 
 fn main() {
