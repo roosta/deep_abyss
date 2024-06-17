@@ -145,8 +145,8 @@ fn go_to_start(
         let surface = ldtk_project
             .get_raw_level_by_iid(&SURFACE_IID.to_string())
             .expect("Unable to get surface level");
-        let center = (surface.px_wid as f32 - projection.area.max.x / 2.0) / 2.0;
-        camera_transform.translation.x = center;
+        let center = surface.px_wid / 2;
+        camera_transform.translation.x = center as f32;
 
         let top = (surface.world_y * -1) as f32 - projection.area.max.y;
         camera_transform.translation.y = top;
