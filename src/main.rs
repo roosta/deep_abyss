@@ -31,6 +31,9 @@ enum AppState {
 
 #[derive(AssetCollection, Resource)]
 struct GameAssets {
+    #[asset(path = "fonts/PixelifySans-Regular.ttf")]
+    font: Handle<Font>,
+
     #[asset(path = "deep_abyss.ldtk")]
     level: Handle<LdtkProject>,
 }
