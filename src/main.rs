@@ -29,23 +29,10 @@ enum AppState {
     Paused,
 }
 
-
 #[derive(AssetCollection, Resource)]
-struct LevelAssets {
+struct GameAssets {
     #[asset(path = "deep_abyss.ldtk")]
-    ldtk_handle: Handle<LdtkProject>,
-}
-
-fn spawn_level(
-    mut commands: Commands,
-    level_assets: Res<LevelAssets>,
-    mut state: ResMut<NextState<AppState>>
-) {
-    commands.spawn(LdtkWorldBundle {
-        ldtk_handle: level_assets.ldtk_handle.clone(),
-        ..Default::default()
-    });
-    state.set(AppState::Surface);
+    level: Handle<LdtkProject>,
 }
 
 fn main() {
@@ -65,11 +52,10 @@ fn main() {
             position_to_transform: false,
             transform_to_position: true,
         })
-        .add_systems(OnEnter(AppState::Setup), spawn_level)
         .add_loading_state(
             LoadingState::new(AppState::Loading)
                 .continue_to_state(AppState::Setup)
-                .load_collection::<LevelAssets>(),
+                .load_collection::<GameAssets>(),
         )
         .insert_resource(LdtkSettings {
             level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {

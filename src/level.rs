@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+
 use rand::Rng;
 use std::collections::{HashMap, HashSet};
 use bevy_xpbd_2d::prelude::{
@@ -8,6 +9,7 @@ use bevy_xpbd_2d::prelude::{
     CollisionLayers,
 };
 
+use crate::{AppState, GameAssets};
 use crate::player::Player;
 use crate::physics::GameLayer;
 
@@ -269,8 +271,23 @@ fn follow_player(
         }
     }
 }
+
+
+fn spawn_level(
+    mut commands: Commands,
+    assets: Res<GameAssets>,
+    mut state: ResMut<NextState<AppState>>
+) {
+    commands.spawn(LdtkWorldBundle {
+        ldtk_handle: assets.level.clone(),
+        ..Default::default()
+    });
+    state.set(AppState::Surface);
+}
+
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, (spawn_collisions, follow_player));
+        app.add_systems(OnEnter(AppState::Setup), spawn_level);
     }
 }
