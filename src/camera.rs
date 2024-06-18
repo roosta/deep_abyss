@@ -4,7 +4,7 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy::render::camera::{OrthographicProjection, ScalingMode, Viewport};
 
 #[derive(Component, Default)]
-struct GameViewport;
+pub struct GameViewport;
 
 #[derive(Default, Bundle)]
 pub struct CameraBundle {
@@ -19,11 +19,14 @@ pub enum CameraState {
     Auto,
 }
 
+#[derive(Event)]
+pub struct ViewportChange(pub Viewport);
+
 pub struct CameraPlugin;
 
-const ASPECT_RATIO: f32 = 16. / 9.;
-const MAX_WIDTH: f32 = 384.0;
-const MAX_HEIGHT: f32 = 432.0;
+pub const ASPECT_RATIO: f32 = 16. / 9.;
+pub const MAX_WIDTH: f32 = 384.0;
+pub const MAX_HEIGHT: f32 = 432.0;
 
 use crate::player::Player;
 use crate::level::{SURFACE_IID, BOTTOM_IID};
@@ -115,6 +118,7 @@ fn keyboard_control(
 fn clamp_viewport(
     mut camera_query: Query<&mut Camera, With<GameViewport>>,
     mut resize_reader: EventReader<WindowResized>,
+    mut event_writer: EventWriter<ViewportChange>,
 ) {
     for _event in resize_reader.read() {
         let mut camera = camera_query.single_mut();
@@ -123,11 +127,13 @@ fn clamp_viewport(
             let size_y = size.y as f32;
             let max_width = size_y / ASPECT_RATIO;
             let center_x = (size_x / 2.) - (max_width / 2.);
-            camera.viewport = Some(Viewport {
+            let viewport = Viewport {
                 physical_position: UVec2::new(center_x as u32, 0),
                 physical_size: UVec2::new(max_width as u32, size.y),
                 ..default()
-            })
+            };
+            event_writer.send(ViewportChange(viewport.clone()));
+            camera.viewport = Some(viewport);
         }
     }
 }
@@ -158,6 +164,7 @@ impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<CameraState>();
         app.add_systems(Startup, setup);
+        app.add_event::<ViewportChange>();
         app.add_systems(Last, clamp_viewport);
         app.add_systems(Update, keyboard_control.run_if(in_state(CameraState::Manual)));
         app.add_systems(OnEnter(AppState::Surface), go_to_start);

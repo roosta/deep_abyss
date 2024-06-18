@@ -25,8 +25,8 @@ use bevy_xpbd_2d::{
     math::{Scalar, Vector}
 };
 
-const PLAYER_WIDTH: f32 = 16.0;
-const PLAYER_HEIGHT: f32 = 16.0;
+pub const PLAYER_WIDTH: f32 = 16.0;
+pub const PLAYER_HEIGHT: f32 = 16.0;
 
 /// A marker component indicating that an entity is on the ground.
 #[derive(Component)]

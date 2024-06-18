@@ -4,6 +4,7 @@ mod level;
 mod camera;
 mod physics;
 mod chain;
+mod overlay;
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -11,6 +12,7 @@ use bevy_xpbd_2d::prelude::PrepareConfig;
 use bevy_asset_loader::prelude::*;
 use debug::DebugPlugin;
 use camera::CameraPlugin;
+use overlay::OverlayPlugin;
 
 use level::{LevelPlugin, TileBundle};
 use player::{
@@ -47,6 +49,7 @@ fn main() {
             LevelPlugin,
             PlayerPlugin,
             CameraPlugin,
+            OverlayPlugin,
             LdtkPlugin
         ))
         .insert_resource(LevelSelection::index(0))
