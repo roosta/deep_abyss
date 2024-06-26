@@ -5,6 +5,7 @@ use bevy::window::PrimaryWindow;
 use bevy_egui::{
     egui::{
         ScrollArea,
+        Align2,
         SelectableLabel,
         // CollapsingHeader
         Window,
@@ -93,42 +94,45 @@ fn inspector_ui(
                 warn!("Unable to get DiagnosticsStore, FPS counter will not work")
             }
         }
-        Window::new("Deep Abyss: Debug Inspector").show(context.get_mut(), |ui| {
-            ScrollArea::vertical().show(ui, |ui| {
-                ui_for_world(world, ui);
-                ui_for_world_entities_filtered::<With<Player>>(world, ui, false);
+        Window::new("Deep Abyss: Debug Inspector")
+            .default_open(false)
+            .anchor(Align2::LEFT_BOTTOM, [0.0, 0.0])
+            .show(context.get_mut(), |ui| {
+                ScrollArea::vertical().show(ui, |ui| {
+                    ui_for_world(world, ui);
+                    ui_for_world_entities_filtered::<With<Player>>(world, ui, false);
 
-                ui.horizontal(|ui| {
-                    ui.label("Frames per second");
-                    ui.label(fps.round().to_string());
-                });
+                    ui.horizontal(|ui| {
+                        ui.label("Frames per second");
+                        ui.label(fps.round().to_string());
+                    });
 
-                ui.horizontal(|ui| {
-                    ui.label("Collision boxes");
-                    if ui.add(SelectableLabel::new(local.wall_visibility == WallColliderVisibility::Hidden, "Hidden")).clicked() {
-                        local.wall_visibility = WallColliderVisibility::Hidden;
-                        world.send_event(WallColliderVisibility::Hidden);
-                    }
-                    if ui.add(SelectableLabel::new(local.wall_visibility == WallColliderVisibility::Visible, "Visible")).clicked() {
-                        local.wall_visibility = WallColliderVisibility::Visible;
-                        world.send_event(WallColliderVisibility::Visible);
-                    }
-                });
+                    ui.horizontal(|ui| {
+                        ui.label("Collision boxes");
+                        if ui.add(SelectableLabel::new(local.wall_visibility == WallColliderVisibility::Hidden, "Hidden")).clicked() {
+                            local.wall_visibility = WallColliderVisibility::Hidden;
+                            world.send_event(WallColliderVisibility::Hidden);
+                        }
+                        if ui.add(SelectableLabel::new(local.wall_visibility == WallColliderVisibility::Visible, "Visible")).clicked() {
+                            local.wall_visibility = WallColliderVisibility::Visible;
+                            world.send_event(WallColliderVisibility::Visible);
+                        }
+                    });
 
-                let mut next = world.get_resource_mut::<NextState<CameraState>>().unwrap();
-                ui.horizontal(|ui| {
-                    ui.label("Camera control");
-                    if ui.add(SelectableLabel::new(local.camera_control == CameraState::Auto, "Auto")).clicked() {
-                        next.set(CameraState::Auto);
-                        local.camera_control = CameraState::Auto;
-                    }
-                    if ui.add(SelectableLabel::new(local.camera_control == CameraState::Manual, "Manual")).clicked() {
-                        next.set(CameraState::Manual);
-                        local.camera_control = CameraState::Manual;
-                    }
+                    let mut next = world.get_resource_mut::<NextState<CameraState>>().unwrap();
+                    ui.horizontal(|ui| {
+                        ui.label("Camera control");
+                        if ui.add(SelectableLabel::new(local.camera_control == CameraState::Auto, "Auto")).clicked() {
+                            next.set(CameraState::Auto);
+                            local.camera_control = CameraState::Auto;
+                        }
+                        if ui.add(SelectableLabel::new(local.camera_control == CameraState::Manual, "Manual")).clicked() {
+                            next.set(CameraState::Manual);
+                            local.camera_control = CameraState::Manual;
+                        }
+                    });
                 });
             });
-        });
     }
 
 }
@@ -142,6 +146,6 @@ impl Plugin for DebugPlugin {
         app.add_plugins(bevy_inspector_egui::DefaultInspectorConfigPlugin);
         app.add_plugins(FrameTimeDiagnosticsPlugin::default());
         app.add_systems(Update, (inspector_ui, apply_z_index));
-    }
+        }
     // }
 }
