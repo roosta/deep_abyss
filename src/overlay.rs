@@ -1,6 +1,5 @@
 use bevy::{
     prelude::*,
-    window::WindowResized,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
 };
 use bevy::render::camera::ScalingMode;
@@ -62,13 +61,15 @@ fn setup_portrait(
     });
 }
 
+/// Setup overlay camera, using fixed vertical scaling, so that we can draw on the sides of the
+/// game viewport.
 fn setup(
     mut commands: Commands,
 ) {
     let mut camera_overlay = Camera2dBundle {
         camera: Camera {
             order: 1,
-            clear_color: ClearColorConfig::None, // do not use a clear color
+            clear_color: ClearColorConfig::None,
             ..default()
         },
         ..default()
@@ -81,6 +82,9 @@ fn setup(
     });
 }
 
+
+/// Calculate positions for overlay elements. Runs on viewport change, and sets the x position of
+/// each element
 fn calc_position(
     mut reader: EventReader<ViewportChange>,
     mut query: Query<(&mut Transform, &Element)>,
