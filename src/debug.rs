@@ -65,15 +65,6 @@ fn apply_z_index(
     }
 }
 
-// fn _update_print(query: Query<(&Velocity, &Transform), With<Player>>) {
-//     for (velocity, transform) in &query {
-//         println!(
-//             "Velocity: [{:#?}, {:#?}], [{:#?}, {:#?}]",
-//             velocity.x, velocity.y, transform.translation.x, transform.translation.y
-//         )
-//     }
-// }
-
 /// API: https://github.com/emilk/egui
 fn inspector_ui(
     world: &mut World,
@@ -136,16 +127,6 @@ fn inspector_ui(
                         local.camera_control = CameraState::Manual;
                     }
                 });
-                // ui.heading("State");
-                // ui.label("z index");
-                // ui_for_resource::<ZIndex>(world, ui);
-
-                // CollapsingHeader::new("State").show(ui, |ui| {
-                //     ui.label("z index");
-                //     ui_for_resource::<ZIndex>(world, ui);
-                // });
-                // ui.heading("Entities");
-                // bevy_inspector_egui::bevy_inspector::ui_for_world_entities(world, ui);
             });
         });
     }
