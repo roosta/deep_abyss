@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::chain;
+// use crate::chain;
 use crate::physics::GameLayer;
 
 // use bevy_inspector_egui::Inspectable;
 
 // use crate::level::ColliderSize;
-use bevy_xpbd_2d::{
+use avian2d::{
     prelude::{
         Collider,
         RigidBody,
@@ -21,7 +21,7 @@ use bevy_xpbd_2d::{
         GravityScale,
         CollisionLayers,
     },
-    components::LockedAxes,
+    // components::LockedAxes,
     math::{Scalar, Vector}
 };
 
@@ -63,7 +63,7 @@ pub struct PhysicsBundle {
     rigid_body: RigidBody,
     restitution: Restitution,
     collider: Collider,
-    locked_axis: LockedAxes,
+    // locked_axis: LockedAxes,
     ground_caster: ShapeCaster,
     friction: Friction,
     collider_density: ColliderDensity,
@@ -88,8 +88,8 @@ pub struct PlayerBundle {
     #[worldly]
     worldly: Worldly,
 
-    #[sprite_sheet_bundle]
-    sprite_bundle: SpriteSheetBundle,
+    #[sprite]
+    sprite: Sprite,
 }
 
 impl Default for MovementBundle {
@@ -115,9 +115,9 @@ impl Default for PhysicsBundle {
             rigid_body: RigidBody::Dynamic,
             restitution: Restitution::ZERO.with_combine_rule(CoefficientCombine::Min),
             collider,
-            locked_axis: LockedAxes::ROTATION_LOCKED,
-            ground_caster: ShapeCaster::new(caster_shape, Vector::ZERO, 0.0, Direction2d::NEG_Y)
-                .with_max_time_of_impact(10.0),
+            // locked_axis: LockedAxes::ROTATION_LOCKED,
+            ground_caster: ShapeCaster::new(caster_shape, Vector::ZERO, 0.0, Dir2::NEG_Y)
+                .with_max_distance(10.0),
             friction: Friction::ZERO.with_combine_rule(CoefficientCombine::Min),
             collider_density: ColliderDensity(2.0),
             gravity_scale: GravityScale(1.5),
@@ -163,7 +163,7 @@ fn movement(
     ), With<Player>>,
 ) {
 
-    let delta_time = time.delta_seconds();
+    let delta_time = time.delta_secs();
     for event in movement_event_reader.read() {
 
         for (mut linear_velocity, acceleration, _is_grounded) in &mut query {

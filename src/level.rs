@@ -3,7 +3,7 @@ use bevy_ecs_ldtk::prelude::*;
 
 use rand::Rng;
 use std::collections::{HashMap, HashSet};
-use bevy_xpbd_2d::prelude::{
+use avian2d::prelude::{
     RigidBody,
     Collider,
     CollisionLayers,
@@ -34,7 +34,8 @@ struct Plate {
 
 #[derive(Bundle)]
 struct ColliderBundle {
-    sprite_bundle: SpriteBundle,
+    sprite: Sprite,
+    transform: Transform,
     size: ColliderSize,
     rigid_body: RigidBody,
     collider: Collider,
@@ -85,13 +86,13 @@ pub struct LevelPlugin;
 /// Source: https://github.com/Trouv/bevy_ecs_ldtk/blob/201d908ae3e4f3deeb40de228f234c414c6b3141/examples/platformer/systems.rs#L62-L229
 ///
 /// Modified roosta<mail@roosta.sh>
-/// Modified to use bevy_xpbd_2d physics engine instead of rapier
+/// Modified to use avian physics engine instead of rapier
 fn spawn_collisions(
     mut commands: Commands,
     tile_query: Query<(&GridCoords, &Parent), Added<Tile>>,
     parent_query: Query<&Parent, Without<Tile>>,
     level_query: Query<(Entity, &LevelIid)>,
-    ldtk_projects: Query<&Handle<LdtkProject>>,
+    ldtk_projects: Query<&LdtkProjectHandle>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
     // mut player_query: Query<(&mut Velocity, &Transform), With<Player>>,
     // collider_query: Query<(Entity, &Transform, &Tile), With<Collider>>,
@@ -209,15 +210,12 @@ fn spawn_collisions(
                         let center_y =
                             (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32 / 2.;
                         level.spawn(ColliderBundle {
-                            sprite_bundle: SpriteBundle {
-                                sprite: Sprite {
-                                    color: Color::rgb(red, green, blue),
-                                    custom_size: Some(Vec2::new(width, height)),
-                                    ..default()
-                                },
-                                transform: Transform::from_xyz(center_x, center_y, 0.0),
+                            sprite: Sprite {
+                                color: Color::srgb(red, green, blue),
+                                custom_size: Some(Vec2::new(width, height)),
                                 ..default()
                             },
+                            transform: Transform::from_xyz(center_x, center_y, 0.0),
                             size: ColliderSize(Vec2::new(width, height)),
                             collider: Collider::rectangle(width, height),
                             rigid_body: RigidBody::Static,
@@ -239,7 +237,7 @@ fn spawn_collisions(
 fn follow_player(
     players: Query<&GlobalTransform, With<Player>>,
     levels: Query<(&LevelIid, &GlobalTransform)>,
-    ldtk_projects: Query<&Handle<LdtkProject>>,
+    ldtk_projects: Query<&LdtkProjectHandle>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
     mut level_selection: ResMut<LevelSelection>,
 ) {
@@ -279,7 +277,7 @@ fn spawn_level(
     mut state: ResMut<NextState<AppState>>
 ) {
     commands.spawn(LdtkWorldBundle {
-        ldtk_handle: assets.level.clone(),
+        ldtk_handle: assets.level.clone().into(),
         ..Default::default()
     });
     state.set(AppState::Surface);

@@ -1,6 +1,6 @@
 use bevy::{
     prelude::*,
-    sprite::{MaterialMesh2dBundle, Mesh2dHandle},
+    sprite::{MeshMaterial2d},
 };
 use bevy::render::camera::ScalingMode;
 
@@ -24,16 +24,18 @@ use crate::camera::{
 
 use bevy::render::view::visibility::RenderLayers;
 
-#[derive(Default, Bundle)]
+#[derive(Bundle)]
 pub struct CameraBundle {
     marker: OverlayViewport,
-    camera_bundle: Camera2dBundle,
+    projection: OrthographicProjection,
+    camera: Camera,
     render_layers: RenderLayers,
 }
 
 #[derive(Default, Bundle)]
 pub struct ElementBundle {
-    mesh_bundle: MaterialMesh2dBundle<ColorMaterial>,
+    mesh: Mesh2d,
+    material: MeshMaterial2d<ColorMaterial>,
     element: Element,
     render_layers: RenderLayers,
 }
@@ -43,17 +45,14 @@ fn setup_portrait(
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
 ) {
-    let srcery_green = Color::hex("#519F50").unwrap();
-    let material = materials.add(srcery_green);
+    // let srcery_green = Srgba::hex("#519F50").unwrap();
+    let material = materials.add(Color::srgb(0.2, 0.7, 0.9));
     let width = 16.0;
     let height = 16.0;
-    let mesh = Mesh2dHandle(meshes.add(Rectangle::new(width, height)));
+    let mesh = meshes.add(Rectangle::new(width, height));
     commands.spawn(ElementBundle {
-        mesh_bundle: MaterialMesh2dBundle {
-            mesh,
-            material,
-            ..default()
-        },
+        mesh: Mesh2d(mesh),
+        material: MeshMaterial2d(material),
         element: Element { width, height },
         render_layers: RenderLayers::layer(1),
 
@@ -66,19 +65,20 @@ fn setup_portrait(
 fn setup(
     mut commands: Commands,
 ) {
-    let mut camera_overlay = Camera2dBundle {
-        camera: Camera {
-            order: 1,
-            clear_color: ClearColorConfig::None,
-            ..default()
-        },
+    let camera_overlay = Camera {
+        order: 1,
+        clear_color: ClearColorConfig::None,
         ..default()
     };
-    camera_overlay.projection.scaling_mode = ScalingMode::FixedVertical(MAX_HEIGHT);
+    let mut projection = OrthographicProjection {
+        ..OrthographicProjection::default_2d()
+    };
+    projection.scaling_mode = ScalingMode::FixedVertical { viewport_height: MAX_HEIGHT };
     commands.spawn(CameraBundle {
-        camera_bundle: camera_overlay,
+        marker: OverlayViewport,
+        camera: camera_overlay,
+        projection,
         render_layers: RenderLayers::layer(1),
-        ..default()
     });
 }
 

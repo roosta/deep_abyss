@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use bevy_xpbd_2d::{
+use avian2d::{
     prelude::{
         SubstepCount,
         Gravity,
@@ -15,8 +15,9 @@ use bevy_xpbd_2d::{
 };
 pub struct PhysicsPlugin;
 
-#[derive(PhysicsLayer)]
+#[derive(PhysicsLayer, Default)]
 pub enum GameLayer {
+    #[default]
     Player, // Layer 0
     Enemy,  // Layer 1
     Ground, // Layer 2

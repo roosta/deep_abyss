@@ -6,10 +6,11 @@ use bevy::render::camera::{OrthographicProjection, ScalingMode, Viewport};
 #[derive(Component, Default)]
 pub struct GameViewport;
 
-#[derive(Default, Bundle)]
+#[derive(Bundle)]
 pub struct CameraBundle {
     marker: GameViewport,
-    camera_bundle: Camera2dBundle,
+    camera: Camera2d,
+    projection: OrthographicProjection,
 }
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
@@ -34,14 +35,18 @@ use crate::level::{SURFACE_IID, BOTTOM_IID};
 use crate::AppState;
 
 fn setup(mut commands: Commands) {
-    let mut camera_game = Camera2dBundle::default();
-    camera_game.projection.scaling_mode = ScalingMode::AutoMax {
+    let camera_game = Camera2d::default();
+    let mut projection = OrthographicProjection {
+        ..OrthographicProjection::default_2d()
+    };
+    projection.scaling_mode = ScalingMode::AutoMax {
         max_width: MAX_WIDTH,
         max_height: MAX_HEIGHT,
     };
     commands.spawn(CameraBundle {
-        camera_bundle: camera_game,
-        ..default()
+        camera: camera_game,
+        marker: GameViewport,
+        projection
     });
 }
 
@@ -65,7 +70,7 @@ fn follow_player(
 /// world bounds
 fn clamp_world(
     // level_query: Query<(&Transform, &LevelIid), (Without<GameViewport>, Without<Player>)>,
-    ldtk_projects: Query<&Handle<LdtkProject>>,
+    ldtk_projects: Query<&LdtkProjectHandle>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
     mut camera_query: Query<
         (&mut Transform, &OrthographicProjection),
@@ -105,7 +110,7 @@ fn keyboard_control(
     let speed = 100.0;
     let direction = Vec2::new(horizontal as f32, vertical as f32);
     let mut camera_transform = camera_query.single_mut();
-    let delta_time = time.delta_seconds();
+    let delta_time = time.delta_secs();
     camera_transform.translation.x += direction.x * speed * delta_time;
     camera_transform.translation.y += direction.y * speed * delta_time;
 
@@ -139,7 +144,7 @@ fn clamp_viewport(
 }
 
 fn go_to_start(
-    ldtk_projects: Query<&Handle<LdtkProject>>,
+    ldtk_projects: Query<&LdtkProjectHandle>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
     mut camera_query: Query<(&mut Transform, &OrthographicProjection), With<GameViewport>,
     >,
