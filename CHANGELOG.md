@@ -2,6 +2,55 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.9.0](https://github.com/roosta/deep_abyss/compare/a1fa6f5e6a37925034bbe1d7e526cfd8b49a8507..0.9.0) - 2025-02-20
+#### Bug Fixes
+- **(lvl)** adjust height of suface lvl, rm player - ([9bc707d](https://github.com/roosta/deep_abyss/commit/9bc707d87996b636ed95cb6ad9537d354cc86113)) - [@roosta](https://github.com/roosta)
+- **(lvl)** convert layout to 2d freemap - ([c9fd0a0](https://github.com/roosta/deep_abyss/commit/c9fd0a07a46219d82a53783d2a6dca1b9eb17bda)) - [@roosta](https://github.com/roosta)
+- lock player movement axes - ([7e56b20](https://github.com/roosta/deep_abyss/commit/7e56b20f4fc5bb8428c6ea9b346dd01795f15f85)) - [@roosta](https://github.com/roosta)
+- reintroduce player - ([187b971](https://github.com/roosta/deep_abyss/commit/187b971e7b11a795be8b01a5cc511643c4019072)) - [@roosta](https://github.com/roosta)
+- overlay camera - ([348b869](https://github.com/roosta/deep_abyss/commit/348b869ed252b78b53ebd762455a70ce057f6b68)) - [@roosta](https://github.com/roosta)
+- upgrade deps - ([ce342b5](https://github.com/roosta/deep_abyss/commit/ce342b5f456bd12c62bcbbca9458da8479d5e606)) - [@roosta](https://github.com/roosta)
+- reduce substep count to 10 - ([ae7a783](https://github.com/roosta/deep_abyss/commit/ae7a7834194ce544006589de0e8f564ca89e6372)) - [@roosta](https://github.com/roosta)
+- fix surface centering - ([cdc2840](https://github.com/roosta/deep_abyss/commit/cdc28400b711bb5a4f2d34ed5f4460bc18e1f4ef)) - [@roosta](https://github.com/roosta)
+- set camera position when assets are loaded - ([88cbc2e](https://github.com/roosta/deep_abyss/commit/88cbc2e3136d805ad3448a39046c7c0cb0ea2ead)) - [@roosta](https://github.com/roosta)
+- fix issues with camera clamping - ([766002d](https://github.com/roosta/deep_abyss/commit/766002d968af69d9e704ba78006e92513aff6476)) - [@roosta](https://github.com/roosta)
+- remove temporary dep - ([a35219f](https://github.com/roosta/deep_abyss/commit/a35219f03747cf861bc7b277d74e3b10a6baa1e1)) - [@roosta](https://github.com/roosta)
+- disable chain spawn - ([bb3882b](https://github.com/roosta/deep_abyss/commit/bb3882b7bef89e80322a694bdb2dd2602026b61a)) - [@roosta](https://github.com/roosta)
+- add collider to chain & setup collision layer - ([621ceed](https://github.com/roosta/deep_abyss/commit/621ceedb2c35cf62e2fe3a5cd086a6040d497e94)) - [@roosta](https://github.com/roosta)
+- remove initial chain jitter - ([3696686](https://github.com/roosta/deep_abyss/commit/3696686fb8b217da897f10ea6fbadb570f7fbc24)) - [@roosta](https://github.com/roosta)
+- leave substep count to default - ([0326036](https://github.com/roosta/deep_abyss/commit/0326036d1c28bc5d58a01eaf715887e9d8e8c86b)) - [@roosta](https://github.com/roosta)
+- fix z transform issue after upgrade (xpbd) - ([1db403b](https://github.com/roosta/deep_abyss/commit/1db403beb4550e922fada6d67d39cd8fe672e82d)) - [@roosta](https://github.com/roosta)
+- remove unneeded apply_deferred - ([5eaa7e4](https://github.com/roosta/deep_abyss/commit/5eaa7e4b55fd3eeb33ccd5a00a17bc6be4b6cf6a)) - [@roosta](https://github.com/roosta)
+- include dylib to fix dynamic linking - ([fa3231f](https://github.com/roosta/deep_abyss/commit/fa3231f8c9b6f44d21144c968eef2215a6030a63)) - [@roosta](https://github.com/roosta)
+#### Continuous Integration
+- fix missing wayland dependency - ([9ba8fcf](https://github.com/roosta/deep_abyss/commit/9ba8fcf01ae4fd92a1727b1fd4173d27c484411e)) - [@roosta](https://github.com/roosta)
+#### Documentation
+- update fn docstrings, remove pointless cmt - ([8e0c9ea](https://github.com/roosta/deep_abyss/commit/8e0c9ea741ff80c417db4fc05f84dee31179c43f)) - [@roosta](https://github.com/roosta)
+- add comment about xpbd & z index - ([b78b8cb](https://github.com/roosta/deep_abyss/commit/b78b8cbf818a5a820efbf22c964c7d257401922a)) - [@roosta](https://github.com/roosta)
+#### Features
+- **(dbg)** move and collapse debug panel - ([c23caf2](https://github.com/roosta/deep_abyss/commit/c23caf269f15004319a59e1adb3453766fbce107)) - [@roosta](https://github.com/roosta)
+- **(dbg)** use selectable label for camera state - ([7b670ed](https://github.com/roosta/deep_abyss/commit/7b670edaaa0ce433b5834eea6823a963b54936c0)) - [@roosta](https://github.com/roosta)
+- **(deps)** add bevy_asset_loader - ([ce1dfaf](https://github.com/roosta/deep_abyss/commit/ce1dfafb7ea00fd0f2562f3ad983d1e70ae7b197)) - [@roosta](https://github.com/roosta)
+- **(deps)** upgrade to bevy 0.13 - ([a1fa6f5](https://github.com/roosta/deep_abyss/commit/a1fa6f5e6a37925034bbe1d7e526cfd8b49a8507)) - [@roosta](https://github.com/roosta)
+- **(lvl)** add surface level, rename prev - ([c4bd8ee](https://github.com/roosta/deep_abyss/commit/c4bd8ee591ca8cc354598ffae5836830e5ea3cb1)) - [@roosta](https://github.com/roosta)
+- **(lvl)** remove ceiling - ([d0362f8](https://github.com/roosta/deep_abyss/commit/d0362f87ae5e02a5fef268e1bdd53229fc0c2905)) - [@roosta](https://github.com/roosta)
+- **(wip)** load multiple levels - ([685ecaa](https://github.com/roosta/deep_abyss/commit/685ecaa1569d70dcfd5bed35d10698320d855d4a)) - [@roosta](https://github.com/roosta)
+- enable wayland support - ([75869ea](https://github.com/roosta/deep_abyss/commit/75869eae83e9c185556f81acc1dafb08fe72eeb5)) - [@roosta](https://github.com/roosta)
+- add overlay camera for UI outside viewport - ([c76f55a](https://github.com/roosta/deep_abyss/commit/c76f55a0f71bb04119b386901f95ff933aa8f149)) - [@roosta](https://github.com/roosta)
+- add & load font - ([e0e5fea](https://github.com/roosta/deep_abyss/commit/e0e5fea49f5eda2fc334689d2285a7a9c681d8c5)) - [@roosta](https://github.com/roosta)
+- add appstate, track loading assets - ([e96b40e](https://github.com/roosta/deep_abyss/commit/e96b40e80ae1e050012e41c3a434bc2b1164b5b5)) - [@roosta](https://github.com/roosta)
+- proof of concept chain - ([9abfc35](https://github.com/roosta/deep_abyss/commit/9abfc3537bc57e66f1580d2cdc108b4adfd09c63)) - [@roosta](https://github.com/roosta)
+#### Miscellaneous Chores
+- **(fmt)** remove unfinished comment - ([f767b0a](https://github.com/roosta/deep_abyss/commit/f767b0a71c55b5541a118726b1d98930caccf048)) - [@roosta](https://github.com/roosta)
+- cleanup comments - ([6d4da86](https://github.com/roosta/deep_abyss/commit/6d4da865f5d7c84a1fcacf3d7754f82650395125)) - [@roosta](https://github.com/roosta)
+#### Refactoring
+- move spawn level, rename asset coll - ([31fdd05](https://github.com/roosta/deep_abyss/commit/31fdd05a91d21846954a679a368e2ad1125de4f8)) - [@roosta](https://github.com/roosta)
+- isolate z_index to debug plugin - ([e5afedd](https://github.com/roosta/deep_abyss/commit/e5afedd5de008f845531036d1de5e8af39c574b7)) - [@roosta](https://github.com/roosta)
+- rename function, add docstring - ([03877b3](https://github.com/roosta/deep_abyss/commit/03877b3b16e04dd41ce5fd8a60ad155434516d44)) - [@roosta](https://github.com/roosta)
+- rename tilemap level - ([2f0273c](https://github.com/roosta/deep_abyss/commit/2f0273ce050fc5785eed0e5f3cc40d389574a4ac)) - [@roosta](https://github.com/roosta)
+
+- - -
+
 ## [0.8.0](https://github.com/roosta/deep_abyss/compare/0.7.1..0.8.0) - 2024-03-14
 #### Bug Fixes
 - fix debug query panic on exit - ([498bb9c](https://github.com/roosta/deep_abyss/commit/498bb9c2820d9fe31e31acb82332f4122f961c9d)) - [@roosta](https://github.com/roosta)
