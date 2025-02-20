@@ -177,7 +177,7 @@ impl Plugin for CameraPlugin {
             (follow_player, clamp_world)
             .chain()
             .run_if(in_state(CameraState::Auto))
-            .run_if(in_state(AppState::Diving))
+            .run_if(in_state(AppState::Surface))
             );
     }
 }

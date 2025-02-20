@@ -16,7 +16,7 @@ use overlay::OverlayPlugin;
 
 use level::{LevelPlugin, TileBundle};
 use player::{
-    // PlayerBundle,
+    PlayerBundle,
     PlayerPlugin
 };
 use physics::PhysicsPlugin;
@@ -69,7 +69,7 @@ fn main() {
             },
             ..default()
         })
-        // .register_ldtk_entity::<PlayerBundle>("Player")
+        .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_int_cell::<TileBundle>(1)
         // .init_resource::<LevelWalls>()
         .init_state::<AppState>()
