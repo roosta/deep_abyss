@@ -20,6 +20,7 @@ use avian2d::{
         ColliderDensity,
         GravityScale,
         CollisionLayers,
+        LockedAxes
     },
     // components::LockedAxes,
     math::{Scalar, Vector}
@@ -63,7 +64,7 @@ pub struct PhysicsBundle {
     rigid_body: RigidBody,
     restitution: Restitution,
     collider: Collider,
-    // locked_axis: LockedAxes,
+    locked_axes: LockedAxes,
     ground_caster: ShapeCaster,
     friction: Friction,
     collider_density: ColliderDensity,
@@ -115,7 +116,7 @@ impl Default for PhysicsBundle {
             rigid_body: RigidBody::Dynamic,
             restitution: Restitution::ZERO.with_combine_rule(CoefficientCombine::Min),
             collider,
-            // locked_axis: LockedAxes::ROTATION_LOCKED,
+            locked_axes: LockedAxes::ROTATION_LOCKED,
             ground_caster: ShapeCaster::new(caster_shape, Vector::ZERO, 0.0, Dir2::NEG_Y)
                 .with_max_distance(10.0),
             friction: Friction::ZERO.with_combine_rule(CoefficientCombine::Min),
