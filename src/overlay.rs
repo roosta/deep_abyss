@@ -29,6 +29,7 @@ pub struct CameraBundle {
     marker: OverlayViewport,
     projection: OrthographicProjection,
     camera: Camera,
+    camera_2d: Camera2d,
     render_layers: RenderLayers,
 }
 
@@ -65,9 +66,12 @@ fn setup_portrait(
 fn setup(
     mut commands: Commands,
 ) {
-    let camera_overlay = Camera {
-        order: 1,
+    let camera = Camera {
         clear_color: ClearColorConfig::None,
+        order: 1,
+        ..default()
+    };
+    let camera_2d = Camera2d {
         ..default()
     };
     let mut projection = OrthographicProjection {
@@ -76,7 +80,8 @@ fn setup(
     projection.scaling_mode = ScalingMode::FixedVertical { viewport_height: MAX_HEIGHT };
     commands.spawn(CameraBundle {
         marker: OverlayViewport,
-        camera: camera_overlay,
+        camera,
+        camera_2d,
         projection,
         render_layers: RenderLayers::layer(1),
     });
