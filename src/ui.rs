@@ -1,7 +1,10 @@
 use bevy::{prelude::*, render::view::visibility::RenderLayers};
+use std::time::Duration;
 
 pub struct UiPlugin;
 
+
+use crate::{AppState, GameAssets};
 use crate::camera::{
     GameCamera,
     UI_LAYER
@@ -17,6 +20,14 @@ pub struct CameraBundle {
     camera_2d: Camera2d,
     render_layers: RenderLayers,
 }
+
+// Component to identify our blinking text
+#[derive(Component)]
+struct BlinkingText {
+    timer: Timer,
+    visible: bool,
+}
+
 
 fn setup_border(mut commands: Commands) {
     // Create a border using four rectangles
@@ -84,7 +95,8 @@ fn setup_border(mut commands: Commands) {
             ));
         });
 }
-// Modified sync system that only syncs viewport and projection
+
+// Sync ui camera with game camera, except for the transform
 fn sync_ui_camera(
     game_camera: Query<(&Camera, &OrthographicProjection), (With<GameCamera>, Changed<OrthographicProjection>)>,
     mut ui_camera: Query<(&mut Camera, &mut OrthographicProjection), (With<UiCamera>, Without<GameCamera>)>,
@@ -101,6 +113,60 @@ fn sync_ui_camera(
     }
 }
 
+fn setup_start_text(
+    mut commands: Commands,
+    assets: Res<GameAssets>
+) {
+    commands
+        .spawn((
+                Node {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    top: Val::Percent(30.0),
+                    justify_content: JustifyContent::Center,
+                    ..default()
+                },
+                RenderLayers::layer(UI_LAYER),
+        ))
+        .with_children(|parent| {
+            parent.spawn((
+                    Text::new("Press start"),
+                    TextFont {
+                        font: assets.font.clone().into(),
+                        font_size: 42.0,
+                        ..default()
+                    },
+                    // Because this is a distinct label widget and
+                    // not button/list item text, this is necessary
+                    // for accessibility to treat the text accordingly.
+                    Label,
+                    BlinkingText {
+                        timer: Timer::new(Duration::from_secs_f32(0.7), TimerMode::Repeating),
+                        visible: true,
+                    },
+                    RenderLayers::layer(UI_LAYER)
+            ));
+        });
+}
+
+// System to handle the blinking effect
+fn blink_text(
+    time: Res<Time>,
+    mut query: Query<(&mut BlinkingText, &mut Visibility)>,
+) {
+    for (mut blink, mut visibility) in &mut query {
+        blink.timer.tick(time.delta());
+
+        if blink.timer.just_finished() {
+            blink.visible = !blink.visible;
+            *visibility = if blink.visible {
+                Visibility::Visible
+            } else {
+                Visibility::Hidden
+            };
+        }
+    }
+}
 fn setup(mut commands: Commands) {
     let camera = Camera {
         clear_color: ClearColorConfig::None,
@@ -118,7 +184,7 @@ fn setup(mut commands: Commands) {
 
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (setup, setup_border));
-        app.add_systems(Update, sync_ui_camera);
+        app.add_systems(OnEnter(AppState::Setup), (setup, setup_start_text));
+        app.add_systems(Update, (sync_ui_camera, blink_text));
     }
 }
