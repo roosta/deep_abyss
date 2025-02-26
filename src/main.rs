@@ -5,6 +5,7 @@ mod camera;
 mod physics;
 mod chain;
 mod overlay;
+mod ui;
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -12,6 +13,7 @@ use avian2d::prelude::PrepareConfig;
 use bevy_asset_loader::prelude::*;
 use debug::DebugPlugin;
 use camera::CameraPlugin;
+use ui::UiPlugin;
 use overlay::OverlayPlugin;
 
 use level::{LevelPlugin, TileBundle};
@@ -50,7 +52,8 @@ fn main() {
             PlayerPlugin,
             CameraPlugin,
             OverlayPlugin,
-            LdtkPlugin
+            LdtkPlugin,
+            UiPlugin
         ))
         .insert_resource(LevelSelection::index(0))
         // This is a bit of a hack getting xpbd to leave z-index alone, see 1db403b
