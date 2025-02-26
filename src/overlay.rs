@@ -5,7 +5,7 @@ use bevy::{
 use bevy::render::camera::ScalingMode;
 
 #[derive(Component, Default)]
-struct OverlayViewport;
+struct OverlayCamera;
 
 #[derive(Component, Default)]
 struct Element {
@@ -26,7 +26,7 @@ use bevy::render::view::visibility::RenderLayers;
 
 #[derive(Bundle)]
 pub struct CameraBundle {
-    marker: OverlayViewport,
+    marker: OverlayCamera,
     projection: OrthographicProjection,
     camera: Camera,
     camera_2d: Camera2d,
@@ -79,7 +79,7 @@ fn setup(
     };
     projection.scaling_mode = ScalingMode::FixedVertical { viewport_height: MAX_HEIGHT };
     commands.spawn(CameraBundle {
-        marker: OverlayViewport,
+        marker: OverlayCamera,
         camera,
         camera_2d,
         projection,
@@ -93,7 +93,7 @@ fn setup(
 fn calc_position(
     mut reader: EventReader<ViewportChange>,
     mut query: Query<(&mut Transform, &Element)>,
-    camera_query: Query<&OrthographicProjection, With<OverlayViewport>>,
+    camera_query: Query<&OrthographicProjection, With<OverlayCamera>>,
 ) {
     for _event in reader.read() {
         let projection = camera_query.single();

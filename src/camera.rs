@@ -4,11 +4,11 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy::render::camera::{OrthographicProjection, ScalingMode, Viewport};
 
 #[derive(Component, Default)]
-pub struct GameViewport;
+pub struct GameCamera;
 
 #[derive(Bundle)]
 pub struct CameraBundle {
-    marker: GameViewport,
+    marker: GameCamera,
     camera: Camera2d,
     projection: OrthographicProjection,
 }
@@ -45,14 +45,14 @@ fn setup(mut commands: Commands) {
     };
     commands.spawn(CameraBundle {
         camera: camera_game,
-        marker: GameViewport,
+        marker: GameCamera,
         projection
     });
 }
 
 /// Set camera translation based on player pos
 fn follow_player(
-    mut camera_query: Query<&mut Transform, (With<GameViewport>, Without<Player>)>,
+    mut camera_query: Query<&mut Transform, (With<GameCamera>, Without<Player>)>,
     player_query: Query<&Transform, With<Player>>,
 ) {
     if let Ok(Transform {
@@ -69,12 +69,12 @@ fn follow_player(
 /// Clamp camera to world, ensure that camera stays within the world, and not over extending beyond
 /// world bounds
 fn clamp_world(
-    // level_query: Query<(&Transform, &LevelIid), (Without<GameViewport>, Without<Player>)>,
+    // level_query: Query<(&Transform, &LevelIid), (Without<GameCamera>, Without<Player>)>,
     ldtk_projects: Query<&LdtkProjectHandle>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
     mut camera_query: Query<
         (&mut Transform, &OrthographicProjection),
-        (With<GameViewport>, Without<Player>),
+        (With<GameCamera>, Without<Player>),
     >,
 ) {
     let (mut camera_transform, projection) = camera_query.single_mut();
@@ -98,7 +98,7 @@ fn clamp_world(
 fn keyboard_control(
     time: Res<Time>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    mut camera_query: Query<&mut Transform, With<GameViewport>>,
+    mut camera_query: Query<&mut Transform, With<GameCamera>>,
 ) {
     let left  = keyboard_input.pressed(KeyCode::Numpad4);
     let right = keyboard_input.pressed(KeyCode::Numpad6);
@@ -121,7 +121,7 @@ fn keyboard_control(
 /// Set viewport size and position based on camera size (window)
 /// Ensures that the viewport takes as much space as possible
 fn clamp_viewport(
-    mut camera_query: Query<&mut Camera, With<GameViewport>>,
+    mut camera_query: Query<&mut Camera, With<GameCamera>>,
     mut resize_reader: EventReader<WindowResized>,
     mut event_writer: EventWriter<ViewportChange>,
 ) {
@@ -146,7 +146,7 @@ fn clamp_viewport(
 fn go_to_start(
     ldtk_projects: Query<&LdtkProjectHandle>,
     ldtk_project_assets: Res<Assets<LdtkProject>>,
-    mut camera_query: Query<(&mut Transform, &OrthographicProjection), With<GameViewport>,
+    mut camera_query: Query<(&mut Transform, &OrthographicProjection), With<GameCamera>,
     >,
 ) {
 
