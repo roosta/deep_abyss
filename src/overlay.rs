@@ -19,6 +19,7 @@ pub struct OverlayPlugin;
 use crate::camera::{
     MAX_HEIGHT,
     ASPECT_RATIO,
+    OVERLAY_LAYER,
     ViewportChange
 };
 
@@ -68,7 +69,7 @@ fn setup(
 ) {
     let camera = Camera {
         clear_color: ClearColorConfig::None,
-        order: 1,
+        order: OVERLAY_LAYER as isize,
         ..default()
     };
     let camera_2d = Camera2d {
@@ -83,7 +84,7 @@ fn setup(
         camera,
         camera_2d,
         projection,
-        render_layers: RenderLayers::layer(1),
+        render_layers: RenderLayers::layer(OVERLAY_LAYER),
     });
 }
 

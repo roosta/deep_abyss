@@ -20,6 +20,11 @@ pub enum CameraState {
     Auto,
 }
 
+// Camera layers
+pub const UI_LAYER: usize = 2;
+pub const OVERLAY_LAYER: usize = 1;
+// pub const GAME_LAYER: usize = 0;
+
 #[derive(Event)]
 pub struct ViewportChange(pub Viewport);
 
